@@ -1,4 +1,4 @@
-# Synthetic Consciousness (Rust)
+# Synthetic Consciousness
 
 > Experimental Rust project exploring a conceptual framework for synthetic consciousness
 > using atomic geometry, attraction, statefulness, and perpetual velocity.
