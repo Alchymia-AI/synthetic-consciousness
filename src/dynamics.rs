@@ -1,8 +1,30 @@
 //! Dynamics module: motion integration and perpetual velocity.
+//!
+//! This module handles the physics of entity motion, including:
+//! - Velocity integration from acceleration forces
+//! - Damping to prevent unbounded speeds
+//! - Perpetual velocity enforcement (minimum speed injection)
+//!
+//! ## Perpetual Velocity
+//!
+//! A key architectural feature: entities never fully stop moving.
+//! This ensures ongoing interaction and prevents the system from
+//! settling into static equilibrium, maintaining dynamic exploration.
+//!
+//! ## Design Philosophy
+//!
+//! Consciousness requires continuous activity. By enforcing a minimum
+//! velocity, we guarantee that entities remain engaged with their environment,
+//! creating the conditions for emergent awareness.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use serde::{Deserialize, Serialize};
 
 /// Configuration for dynamics integration.
+/// 
+/// Controls timestep, velocity constraints, and damping.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct DynamicsConfig {
     /// Time step.
@@ -24,6 +46,21 @@ impl DynamicsConfig {
 }
 
 /// Integrate motion with perpetual velocity enforcement.
+/// 
+/// Updates position and velocity using semi-implicit Euler integration:
+/// 1. Apply acceleration to velocity
+/// 2. Apply damping
+/// 3. Enforce minimum speed (perpetual motion)
+/// 4. Update position
+/// 
+/// The minimum speed enforcement is a key architectural feature,
+/// ensuring entities never become completely static.
+/// 
+/// # Arguments
+/// * `position` - Current position (modified in-place)
+/// * `velocity` - Current velocity (modified in-place)
+/// * `acceleration` - Acceleration vector for this timestep
+/// * `config` - Dynamics configuration
 pub fn integrate_motion(
     position: &mut [f32],
     velocity: &mut [f32],

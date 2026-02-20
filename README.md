@@ -132,10 +132,17 @@ For full mathematical treatment, see [whitepaper.md](./whitepaper.md).
 ```bash
 # Build
 cargo build --release
-# Run default 2D
+# Run with visualization
+cargo run --release -- --visualize
+# or
+cargo run --release -- -v
+
+# Run with custom config + visualization
+cargo run --release -- example_config_3d.toml --visualize
+
+# Run without visualization (original headless mode)
 cargo run --release
-# Run 3D with custom config
-cargo run --release -- example_config_3d.toml
+# Test
 cargo test
 ```
 

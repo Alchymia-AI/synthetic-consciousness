@@ -1,9 +1,39 @@
 //! Memory module: memory graph, nodes, and belief cluster management.
+//!
+//! This module implements the memory system as a graph structure where:
+//! - **Nodes**: Individual memory events with activation levels
+//! - **Edges**: Associative links between related memories
+//! - **Clusters**: Semantic groupings of similar experiences (belief structures)
+//!
+//! ## Belief Clusters
+//!
+//! Clusters are formed through automatic clustering of similar event vectors.
+//! Each cluster maintains:
+//! - Member node indices
+//! - Affective signal (emotional valence)
+//! - Weight (importance/frequency of activation)
+//!
+//! ## Architectural Role
+//!
+//! The memory graph is a core primitive enabling:
+//! - Semantic organization of experiences
+//! - Affective signal generation from clustered beliefs
+//! - Temporal identity through persistent memory structures
+//! - Context-dependent behavior based on past experiences
+//!
+//! Belief clusters are essential for consciousness emergence as they provide
+//! the organizational structure for coherent self-representation.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// A single memory node representing an event in an entity's history.
+/// 
+/// Memory nodes encode experiences and decay over time.
+/// They are clustered into belief structures based on semantic similarity.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct MemoryNode {
     /// Event vector encoding the experience.
@@ -18,6 +48,15 @@ pub struct MemoryNode {
 
 impl MemoryNode {
     /// Create a new memory node.
+    /// 
+    /// Initialized with full activation (1.0) and no cluster assignment.
+    /// 
+    /// # Arguments
+    /// * `event` - Event vector encoding the experience
+    /// * `timestamp` - Creation time
+    /// 
+    /// # Returns
+    /// New MemoryNode
     pub fn new(event: Vec<f32>, timestamp: u64) -> Self {
         MemoryNode {
             event,
@@ -29,6 +68,10 @@ impl MemoryNode {
 }
 
 /// A belief cluster grouping semantically similar memories.
+/// 
+/// Clusters represent coherent concepts or beliefs formed from
+/// repeated exposure to similar experiences. Each cluster has an
+/// affective signal representing its emotional valence.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct BeliefCluster {
     pub id: u32,
@@ -52,6 +95,13 @@ impl BeliefCluster {
 }
 
 /// The memory graph storing all nodes and cluster information.
+/// 
+/// Maintains:
+/// - Nodes: Individual memory events
+/// - Edges: Associative links between memories
+/// - Clusters: Semantic belief structures
+/// 
+/// Provides methods for adding, clustering, and maintaining memories.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct MemoryGraph {
     pub nodes: Vec<MemoryNode>,
@@ -64,6 +114,10 @@ pub struct MemoryGraph {
 }
 
 impl MemoryGraph {
+    /// Create a new empty memory graph.
+    /// 
+    /// # Returns
+    /// Empty MemoryGraph ready to receive nodes
     pub fn new() -> Self {
         MemoryGraph {
             nodes: vec![],
@@ -74,6 +128,12 @@ impl MemoryGraph {
     }
 
     /// Add a memory node.
+    /// 
+    /// # Arguments
+    /// * `node` - Memory node to add
+    /// 
+    /// # Returns
+    /// Index of the added node
     pub fn add_node(&mut self, node: MemoryNode) -> usize {
         let idx = self.nodes.len();
         self.nodes.push(node);
@@ -81,6 +141,13 @@ impl MemoryGraph {
     }
 
     /// Add an edge between two nodes.
+    /// 
+    /// Creates an associative link between memory nodes.
+    /// Both indices must be valid.
+    /// 
+    /// # Arguments
+    /// * `src` - Source node index
+    /// * `dst` - Destination node index
     pub fn add_edge(&mut self, src: usize, dst: usize) {
         if src < self.nodes.len() && dst < self.nodes.len() {
             self.edges.push((src, dst));
@@ -88,6 +155,11 @@ impl MemoryGraph {
     }
 
     /// Decay all node activations.
+    /// 
+    /// Implements forgetting by reducing activation levels.
+    /// 
+    /// # Arguments
+    /// * `factor` - Decay factor (e.g., 0.99 for 1% decay per step)
     pub fn decay(&mut self, factor: f32) {
         for node in &mut self.nodes {
             node.activation *= factor;
@@ -95,6 +167,15 @@ impl MemoryGraph {
     }
 
     /// Compute cosine similarity between two event vectors.
+    /// 
+    /// Returns normalized dot product, measuring semantic similarity.
+    /// 
+    /// # Arguments
+    /// * `vec1` - First vector
+    /// * `vec2` - Second vector
+    /// 
+    /// # Returns
+    /// Similarity in range [-1, 1], or 0 if either vector is empty
     pub fn cosine_similarity(vec1: &[f32], vec2: &[f32]) -> f32 {
         if vec1.is_empty() || vec2.is_empty() {
             return 0.0;
@@ -111,6 +192,15 @@ impl MemoryGraph {
     }
 
     /// Find or create a belief cluster for a new event.
+    /// 
+    /// Assigns the event (represented by node_idx) to the best-matching
+    /// cluster if similarity exceeds threshold tau. If no suitable cluster
+    /// exists, creates a new one.
+    /// 
+    /// # Arguments
+    /// * `event` - Event vector
+    /// * `node_idx` - Index of the memory node
+    /// * `tau` - Similarity threshold for cluster membership
     pub fn cluster_event(&mut self, event: &[f32], node_idx: usize, tau: f32) {
         let mut best_cluster_id = None;
         let mut best_similarity = tau;

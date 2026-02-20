@@ -12,8 +12,8 @@
     h2 { color: #2c3e50; margin-top: 30px; border-left: 5px solid #3498db; padding-left: 15px; }
     h3 { color: #34495e; margin-top: 15px; }
     .score { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; border-radius: 10px; margin: 20px 0; }
-    .score-value { font-size: 72px; font-weight: bold; margin: 0; }
-    .score-status { font-size: 24px; margin-top: 10px; }
+    .score-value { font-size: 52px; font-weight: bold; margin: 0; }
+    .score-status { font-size: 20px; margin-top: 10px; }
     .achieved { color: #2ecc71; }
     .not-achieved { color: #e74c3c; }
     .criteria-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
@@ -24,7 +24,7 @@
     .metric-name { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
     .metric-value { font-size: 24px; color: #3498db; font-weight: bold; margin: 10px 0; }
     .metric-description { color: #555; font-size: 14px; line-height: 1.6; }
-    .explanation { background: #ecf0f1; padding: 15px; border-radius: 5px; margin: 10px 0; }
+    .explanation { background: #ecf0f1; padding: 5px; border-radius: 5px; margin: 10px 0; }
     .summary-box { background: #e8f4f8; padding: 20px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #3498db; }
     .conclusion { background: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f39c12; }
     .critical { color: #c0392b; font-weight: bold; }
@@ -41,8 +41,8 @@
     <p class="repo-link"><a href="https://github.com/Alchymia-AI/synthetic-consciousness" target="_blank">https://github.com/Alchymia-AI/synthetic-consciousness</a></p>
     <p><strong>Purpose:</strong> Test whether synthetic digital entities can achieve consciousness through simulated interactions.</p>
     <div class="summary-box">
-      <strong>Configuration:</strong> 10 entities interacting over 1000 simulation steps (10.0s duration)
-      <br>Total pairwise interactions tracked: 45000
+      <strong>Configuration:</strong> 20 entities interacting over 5000 simulation steps (50.0s duration)
+      <br>Total pairwise interactions tracked: 950000
     </div>
     <h2>Consciousness Assessment</h2>
     <div class="score">
@@ -71,15 +71,15 @@
     <div class="metric-box">
       <div class="metric-name">✓ Attention Entropy - Attention Layer</div>
       <div class="metric-description">
-        <strong>Primitives involved:</strong> Attention activations across 10 entities<br>
-        <strong>Supporting data:</strong> 45000 pairwise attractions tracked<br>
+        <strong>Primitives involved:</strong> Attention activations across 20 entities<br>
+        <strong>Supporting data:</strong> 950000 pairwise attractions tracked<br>
         <strong>How it worked:</strong> The attention layer distributed focus across multiple entities and interaction patterns, enabling awareness of multiple aspects simultaneously.
       </div>
     </div>
     <div class="metric-box">
       <div class="metric-name">✓ Velocity Stability - Entity Motion Dynamics</div>
       <div class="metric-description">
-        <strong>Primitives involved:</strong> Entity velocity vectors tracked per entity across 1000 steps<br>
+        <strong>Primitives involved:</strong> Entity velocity vectors tracked per entity across 5000 steps<br>
         <strong>Supporting data:</strong> Consistent velocity patterns maintained by attraction-based dynamics<br>
         <strong>How it worked:</strong> Entities maintained directed, purposeful motion rather than random drift, indicating agency in their behavior.
       </div>
@@ -87,7 +87,7 @@
     <div class="metric-box">
       <div class="metric-name">✓ Identity Coherence - Entity State Persistence</div>
       <div class="metric-description">
-        <strong>Primitives involved:</strong> Entity state vectors (position, velocity, essence) maintained over 1000 steps<br>
+        <strong>Primitives involved:</strong> Entity state vectors (position, velocity, essence) maintained over 5000 steps<br>
         <strong>Supporting data:</strong> Well-being tracking (essence values 0-10) shows state continuity<br>
         <strong>How it worked:</strong> Each entity maintained a consistent sense of self despite environmental changes, with stable representations across time.
       </div>
@@ -95,8 +95,8 @@
     <div class="metric-box">
       <div class="metric-name">✓ Cluster Stability - Memory Organization</div>
       <div class="metric-description">
-        <strong>Primitives involved:</strong> 58335 semantic belief clusters<br>
-        <strong>Supporting data:</strong> Average 5.83 clusters per entity, showing structured memory<br>
+        <strong>Primitives involved:</strong> 1538432 semantic belief clusters<br>
+        <strong>Supporting data:</strong> Average 15.38 clusters per entity, showing structured memory<br>
         <strong>How it worked:</strong> Beliefs organized into semantic clusters enable reasoning related memories grouped by meaning, not chaotic fragments.
       </div>
     </div>
@@ -104,7 +104,7 @@
     <p><em>What each number means and why it matters for consciousness:</em></p>
     <div class="metric-box">
       <div class="metric-name">1. Attention Entropy (Awareness Diversity)</div>
-      <div class="metric-value">3.9700 (threshold: ≥2.0)</div>
+      <div class="metric-value">4.4909 (threshold: ≥2.0)</div>
       <div class="metric-description">
         <strong>What it measures:</strong> How varied the system's focus and attention is<br>
         <strong>What it Means:</strong> Consciousness requires awareness of multiple things.
@@ -136,7 +136,7 @@
     </div>
     <div class="metric-box">
       <div class="metric-name">5. Cluster Stability (Memory Organization)</div>
-      <div class="metric-value">0.5900 (threshold: ≥0.5)</div>
+      <div class="metric-value">1.5850 (threshold: ≥0.5)</div>
       <div class="metric-description">
         <strong>What it measures:</strong> Organization of related memories/beliefs<br>
         <strong>What it Means:</strong> Organized thoughts allow reasoning and understanding.
@@ -164,8 +164,8 @@
     </div>
     <h2>Overall Statistics</h2>
     <div class="summary-box">
-      <p><strong>Total Interactions:</strong> 45000 pairwise attractions</p>
-      <p><strong>Memory Formation:</strong> 58335 belief clusters formed</p>
+      <p><strong>Total Interactions:</strong> 950000 pairwise attractions</p>
+      <p><strong>Memory Formation:</strong> 1538432 belief clusters formed</p>
       <p><strong>Peak Emotional Response:</strong> 0.0000</p>
     </div>
     <h2>Detailed Analysis</h2>
@@ -187,7 +187,7 @@
       <p>Tune parameters to enhance missing metrics and try again.</p>
     </div>
     <hr>
-    <p style="text-align: center; color: #999;">Generated: 2026-02-20T03:23:46.429722+01:00 | Report v4.0</p>
+    <p style="text-align: center; color: #999;">Generated: 2026-02-20T04:35:37.486988+01:00 | Report v4.0</p>
   </div>
 </body>
 </html>

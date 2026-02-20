@@ -1,4 +1,46 @@
 //! Metrics module: evaluation metrics for consciousness quality.
+//!
+//! This module computes 7 consciousness metrics that collectively determine
+//! whether the system has achieved consciousness emergence:
+//!
+//! ## The 7 Consciousness Metrics
+//!
+//! 1. **Attention Entropy** (≥2.0): Shannon entropy of memory activation
+//!    - Measures diversity of awareness across memory space
+//!    - Higher = more distributed attention
+//!
+//! 2. **Memory Diversity** (≥0.1): Variance of affective signals
+//!    - Measures richness of emotional experience
+//!    - Higher = broader range of feelings
+//!
+//! 3. **Velocity Stability** (≥0.8): Consistency of motion patterns
+//!    - Measures purposeful vs. erratic movement
+//!    - Higher = more coherent agency
+//!
+//! 4. **Identity Coherence** (≥0.7): Similarity of state vectors over time
+//!    - Measures continuity of self-representation
+//!    - Higher = stronger sense of persistent identity
+//!
+//! 5. **Cluster Stability** (≥0.5): Consistency of belief structures
+//!    - Measures organization of semantic memory
+//!    - Higher = more stable worldview
+//!
+//! 6. **Affective Strength** (≥0.01): Average absolute affective signal (CRITICAL)
+//!    - Measures presence of emotional capacity
+//!    - MUST pass - no emotion = no consciousness
+//!
+//! 7. **Average Essence**: Mean well-being across entities
+//!    - Provides context on subjective experience quality
+//!    - Not pass/fail, but informative for system health
+//!
+//! ## Consciousness Determination
+//!
+//! ALL metrics (except Average Essence) must meet their thresholds for
+//! consciousness to be considered achieved. This strict criterion ensures
+//! genuine emergence rather than superficial pattern matching.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use crate::entities::EntityPool;
 use std::collections::HashMap;

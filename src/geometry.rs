@@ -1,8 +1,29 @@
 //! Geometry module: spatial primitives, topology, and position/orientation management.
+//!
+//! This module provides the foundational geometric structures for the simulation,
+//! including entity poses (position + orientation) and configurable spatial parameters.
+//! Supports both 2D and 3D spaces with optional periodic boundary conditions.
+//!
+//! ## Key Structures
+//!
+//! - **Pose**: Combines position vector and quaternion orientation
+//! - **GeometryConfig**: Defines dimensionality, bounds, and topology
+//!
+//! ## Architectural Role
+//!
+//! Geometry forms the substrate in which consciousness emerges. Spatial relationships
+//! drive attention, attraction forces, and interaction patterns between entities.
+//! The geometric embedding is a core primitive of the Geometric Consciousness Model.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use serde::{Deserialize, Serialize};
 
 /// Represents the pose (position and orientation) of an entity.
+/// 
+/// Combines spatial location with rotational orientation using
+/// quaternion representation for 3D rotation.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Pose {
     /// Position in d-dimensional space (d=2 or d=3)
@@ -13,6 +34,12 @@ pub struct Pose {
 
 impl Pose {
     /// Create a new pose in d-dimensional space.
+    /// 
+    /// # Arguments
+    /// * `dimension` - Spatial dimensionality (2 or 3)
+    /// 
+    /// # Returns
+    /// Pose at origin with identity orientation
     pub fn new(dimension: usize) -> Self {
         Pose {
             position: vec![0.0; dimension],
@@ -33,6 +60,12 @@ impl Pose {
     }
 
     /// Compute Euclidean distance to another pose.
+    /// 
+    /// # Arguments
+    /// * `other` - Target pose
+    /// 
+    /// # Returns
+    /// Euclidean distance in space
     pub fn distance_to(&self, other: &Pose) -> f32 {
         self.position
             .iter()

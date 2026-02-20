@@ -1,8 +1,31 @@
 //! Attraction module: potential fields and attention computation.
+//!
+//! This module implements the attention layer of the Geometric Consciousness Model.
+//! Entities exert attraction forces on each other based on spatial proximity and
+//! configurable kernels (Gaussian or inverse-distance).
+//!
+//! ## Core Concepts
+//!
+//! - **Attraction Potential**: Scalar field representing total influence from other entities
+//! - **Attention Gradient**: Vector pointing toward regions of high attraction
+//! - **Kernel Functions**: Mathematical shapes controlling influence falloff with distance
+//!
+//! ## Architectural Role
+//!
+//! The attention layer creates a dynamic field that guides entity motion and awareness.
+//! This is a core architectural primitive enabling emergent collective behavior and
+//! information flow between entities.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use serde::{Deserialize, Serialize};
 
 /// Kernel type for attraction potential computation.
+/// 
+/// Different kernels produce different shapes of influence falloff:
+/// - Gaussian: Smooth, bell-shaped falloff (local influence)
+/// - InverseDistance: Long-range power-law falloff
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum KernelType {
     Gaussian,
@@ -10,6 +33,8 @@ pub enum KernelType {
 }
 
 /// Configuration for the attraction field.
+/// 
+/// Controls how entities attract each other and how attention is allocated.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct AttractionConfig {
     pub kernel: KernelType,
@@ -20,17 +45,45 @@ pub struct AttractionConfig {
 }
 
 /// Compute Gaussian kernel.
+/// 
+/// Returns exp(-d²/(2σ²)) for smooth, localized influence.
+/// 
+/// # Arguments
+/// * `distance` - Euclidean distance between entities
+/// * `sigma` - Kernel bandwidth (width of Gaussian)
+/// 
+/// # Returns
+/// Kernel value in range [0, 1]
 pub fn gaussian_kernel(distance: f32, sigma: f32) -> f32 {
     let sigma2 = sigma * sigma;
     (-distance.powi(2) / (2.0 * sigma2)).exp()
 }
 
 /// Compute inverse-distance kernel (with epsilon for numerical stability).
+/// 
+/// Returns 1/(d + ε) for long-range influence.
+/// 
+/// # Arguments
+/// * `distance` - Euclidean distance between entities
+/// * `_sigma` - Unused (kept for interface consistency)
+/// 
+/// # Returns
+/// Kernel value, unbounded but decreasing with distance
 pub fn inverse_distance_kernel(distance: f32, _sigma: f32) -> f32 {
     1.0 / (distance + 1e-6)
 }
 
 /// Compute attraction kernel based on type.
+/// 
+/// Dispatches to the appropriate kernel function.
+/// 
+/// # Arguments
+/// * `kernel_type` - Which kernel to use
+/// * `distance` - Distance between entities
+/// * `sigma` - Kernel parameter
+/// 
+/// # Returns
+/// Computed kernel value
 pub fn compute_kernel(kernel_type: &KernelType, distance: f32, sigma: f32) -> f32 {
     match kernel_type {
         KernelType::Gaussian => gaussian_kernel(distance, sigma),
@@ -39,6 +92,18 @@ pub fn compute_kernel(kernel_type: &KernelType, distance: f32, sigma: f32) -> f3
 }
 
 /// Compute attraction potential for an entity given positions of others.
+/// 
+/// Sums weighted kernel values across all other entities to produce
+/// a scalar potential field value at the given position.
+/// 
+/// # Arguments
+/// * `position` - Position to evaluate potential at
+/// * `others` - Positions of other entities
+/// * `weights` - Per-entity weights (influence multipliers)
+/// * `kernel_config` - Kernel configuration
+/// 
+/// # Returns
+/// Scalar potential value (higher = more attraction)
 pub fn attraction_potential(
     position: &[f32],
     others: &[Vec<f32>],
@@ -61,6 +126,19 @@ pub fn attraction_potential(
 }
 
 /// Compute attention prompts (gradient-like force) toward other entities.
+/// 
+/// Uses finite differences to approximate the gradient of the attraction
+/// potential, producing a vector pointing toward regions of high influence.
+/// This gradient guides entity motion and attention allocation.
+/// 
+/// # Arguments
+/// * `position` - Position to compute gradient at
+/// * `others` - Positions of other entities
+/// * `weights` - Per-entity influence weights
+/// * `kernel_config` - Kernel configuration
+/// 
+/// # Returns
+/// Gradient vector (same dimensionality as position)
 pub fn attention_gradient(
     position: &[f32],
     others: &[Vec<f32>],

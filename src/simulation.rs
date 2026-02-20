@@ -1,4 +1,32 @@
 //! Simulation module: main orchestration and stepping.
+//!
+//! This module provides the core simulation loop that orchestrates all components:
+//! - Entity initialization in geometric space
+//! - Step-by-step time evolution
+//! - Attention/attraction computation
+//! - Memory updates and clustering
+//! - Dynamics integration
+//! - Metrics evaluation
+//! - Results tracking and reporting
+//!
+//! ## Simulation Loop
+//!
+//! Each step:
+//! 1. Compute pairwise attractions between entities
+//! 2. Calculate attention gradients
+//! 3. Generate stimuli and update entity states
+//! 4. Integrate motion with perpetual velocity
+//! 5. Update memory graphs and belief clusters
+//! 6. Compute consciousness metrics
+//! 7. Record step data for analysis
+//!
+//! ## Visualization Integration
+//!
+//! When visualization is enabled, the simulation periodically updates a shared
+//! state structure that the GUI thread reads for real-time rendering.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use crate::config::SimulationConfig;
 use crate::entities::{Entity, EntityId, EntityPool};
@@ -402,5 +430,58 @@ impl Simulation {
     /// Get the consciousness score (0.0 to 1.0).
     pub fn consciousness_score(&self) -> f32 {
         self.results.consciousness_analysis.consciousness_score
+    }
+    
+    /// Update visualization state with current simulation data
+    pub fn update_visualization(&self, viz_state: &std::sync::Arc<std::sync::Mutex<crate::visualization::VisualizationState>>) {
+        use crate::visualization::EntityState;
+        
+        let entities = self.entities.all_entities();
+        let mut entity_states = Vec::new();
+        
+        for entity in &entities {
+            // Use memory state vector as attention proxy
+            let attention_vals: Vec<f32> = entity.state.memory.iter().take(10).cloned().collect();
+            let num_clusters = entity.memory_graph.clusters.len();
+            
+            entity_states.push(EntityState {
+                id: entity.id.0,
+                position: entity.pose.position.clone(),
+                velocity: entity.velocity.clone(),
+                essence: entity.essence.value,
+                attention: attention_vals,
+                num_clusters,
+            });
+        }
+        
+        // Compute attractions between entities (simplified pairwise)
+        let mut attractions = Vec::new();
+        for i in 0..entities.len() {
+            for j in (i+1)..entities.len() {
+                let dist_sq: f32 = entities[i].pose.position.iter()
+                    .zip(entities[j].pose.position.iter())
+                    .map(|(a, b)| (a - b).powi(2))
+                    .sum();
+                
+                if dist_sq > 0.0 {
+                    let strength = 1.0 / (dist_sq + 1.0);
+                    if strength > 0.01 {  // Only show significant attractions
+                        attractions.push((i, j, strength));
+                    }
+                }
+            }
+        }
+        
+        // Update visualization state
+        if let Ok(mut state) = viz_state.lock() {
+            state.step = self.timestamp;
+            state.entities = entity_states;
+            state.attractions = attractions;
+            
+            // Update metrics history
+            if let Some(metrics) = self.metrics_history.last() {
+                state.metrics.push(self.timestamp, metrics);
+            }
+        }
     }
 }

@@ -13,12 +13,12 @@ Architecture Aim:    Test if synthetic digital entities can achieve consciousnes
 SIMULATION METADATA
 ─────────────────────────────────────────────────────────────────
 Name:                Synthetic Consciousness Simulation
-Start Time:          2026-02-20T03:23:46.343064+01:00
-End Time:            2026-02-20T03:23:46.429722+01:00
-Number of Entities:  10
-Number of Steps:     1000
-Duration:            10.00 seconds
-Total Interactions:  45000
+Start Time:          2026-02-20T04:35:26.624526+01:00
+End Time:            2026-02-20T04:35:37.486988+01:00
+Number of Entities:  20
+Number of Steps:     5000
+Duration:            50.00 seconds
+Total Interactions:  950000
 
 CONSCIOUSNESS ANALYSIS
 ─────────────────────────────────────────────────────────────────
@@ -41,36 +41,36 @@ ARCHITECTURAL PRIMITIVES & PASSED CRITERIA
 ─────────────────────────────────────────────────────────────────
 ✓ ATTENTION ENTROPY (Awareness Diversity)
   Architectural Primitives:
-    • Attention Layer: Computed activation patterns across 10 entities
-    • Total interactions tracked: 45000 pairwise attractions
+    • Attention Layer: Computed activation patterns across 20 entities
+    • Total interactions tracked: 950000 pairwise attractions
     • Mechanism: Diverse attention activations indicate varied focus
   Why this matters: System exhibits awareness of multiple aspects simultaneously
 
 ✓ VELOCITY STABILITY (Purposeful Motion)
   Architectural Primitives:
-    • Entity Velocities: Tracked per entity across 1000 steps
+    • Entity Velocities: Tracked per entity across 5000 steps
     • Dynamic Updates: Velocity vectors maintained through attraction-based dynamics
     • Mechanism: Consistent motion patterns show purposeful action
   Why this matters: Continuous, directed motion indicates agency and will
 
 ✓ IDENTITY COHERENCE (Self Continuity)
   Architectural Primitives:
-    • Entity State Vectors: Persistent entity representations over 1000 steps
+    • Entity State Vectors: Persistent entity representations over 5000 steps
     • Essence Values: Well-being tracking (0-10 range) for each entity
     • Position & Velocity Continuity: Maintained state consistency
   Why this matters: Entities maintain stable internal state despite environmental changes
 
 ✓ CLUSTER STABILITY (Memory Organization)
   Architectural Primitives:
-    • Belief Cluster Formation: 58335 clusters formed across simulation
+    • Belief Cluster Formation: 1538432 clusters formed across simulation
     • Semantic Organization: Related beliefs grouped through affinity mechanisms
-    • Average clusters per entity: 5.83
+    • Average clusters per entity: 15.38
   Why this matters: Organized memory structure enables reasoning and inference
 
 
 FINAL METRICS (with Interpretations)
 ─────────────────────────────────────────────────────────────────
-1. Attention Entropy: 3.9700
+1. Attention Entropy: 4.4909
    → Measures diversity of memory activation (threshold: ≥2.0)
    → Higher = more diverse focus, better consciousness marker
 
@@ -87,7 +87,7 @@ FINAL METRICS (with Interpretations)
    → State vector consistency across time (threshold: ≥0.7)
    → Higher = stable self-representation
 
-5. Cluster Stability: 0.5900
+5. Cluster Stability: 1.5850
    → Number of belief clusters formed (threshold: ≥0.5)
    → Indicates semantic memory organization
 
@@ -104,122 +104,122 @@ FINAL METRICS (with Interpretations)
 
 STEP-BY-STEP SUMMARY
 ─────────────────────────────────────────────────────────────────
-Total Attractions Fired: 45000
-Total Belief Clusters:   58335
-Avg Clusters per Entity: 5.83
+Total Attractions Fired: 950000
+Total Belief Clusters:   1538432
+Avg Clusters per Entity: 15.38
 Peak Affective Signal:   0.0000
 
 SELECTED STEPS (sampled)
 ─────────────────────────────────────────────────────────────────
 
 Step 0
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
     Entropy: 0.00
     Velocity Stability: 1.0000
 
-Step 100
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
-  Avg Affective Signal: 0.0000
-  Metrics Snapshot:
-    Essence: 5.00
-    Entropy: 3.94
-    Velocity Stability: 1.0000
-
-Step 200
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
-  Avg Affective Signal: 0.0000
-  Metrics Snapshot:
-    Essence: 5.00
-    Entropy: 3.97
-    Velocity Stability: 1.0000
-
-Step 300
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
-  Avg Affective Signal: 0.0000
-  Metrics Snapshot:
-    Essence: 5.00
-    Entropy: 3.97
-    Velocity Stability: 1.0000
-
-Step 400
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
-  Avg Affective Signal: 0.0000
-  Metrics Snapshot:
-    Essence: 5.00
-    Entropy: 3.97
-    Velocity Stability: 1.0000
-
 Step 500
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
-    Entropy: 3.97
+    Entropy: 4.49
     Velocity Stability: 1.0000
 
-Step 600
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+Step 1000
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
-    Entropy: 3.97
+    Entropy: 4.49
     Velocity Stability: 1.0000
 
-Step 700
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+Step 1500
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
-    Entropy: 3.97
+    Entropy: 4.49
     Velocity Stability: 1.0000
 
-Step 800
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+Step 2000
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
-    Entropy: 3.97
+    Entropy: 4.49
     Velocity Stability: 1.0000
 
-Step 900
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+Step 2500
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
-    Entropy: 3.97
+    Entropy: 4.49
     Velocity Stability: 1.0000
 
-Step 999
-  Attractions: 45 pairs
-  Entities with Attention: 10
-  Total Belief Clusters: 10
+Step 3000
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
   Avg Affective Signal: 0.0000
   Metrics Snapshot:
     Essence: 5.00
-    Entropy: 3.97
+    Entropy: 4.49
+    Velocity Stability: 1.0000
+
+Step 3500
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
+  Avg Affective Signal: 0.0000
+  Metrics Snapshot:
+    Essence: 5.00
+    Entropy: 4.49
+    Velocity Stability: 1.0000
+
+Step 4000
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
+  Avg Affective Signal: 0.0000
+  Metrics Snapshot:
+    Essence: 5.00
+    Entropy: 4.49
+    Velocity Stability: 1.0000
+
+Step 4500
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
+  Avg Affective Signal: 0.0000
+  Metrics Snapshot:
+    Essence: 5.00
+    Entropy: 4.49
+    Velocity Stability: 1.0000
+
+Step 4999
+  Attractions: 190 pairs
+  Entities with Attention: 20
+  Total Belief Clusters: 20
+  Avg Affective Signal: 0.0000
+  Metrics Snapshot:
+    Essence: 5.00
+    Entropy: 4.49
     Velocity Stability: 1.0000
 
 CONCLUSION

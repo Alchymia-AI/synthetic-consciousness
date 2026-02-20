@@ -1,4 +1,33 @@
-//! Results module: step-by-step tracking and PDF report generation.
+//! Results module: step-by-step tracking and report generation.
+//!
+//! This module handles:
+//! - Recording detailed data for each simulation step
+//! - Analyzing consciousness emergence against thresholds
+//! - Generating comprehensive reports in text and HTML formats
+//!
+//! ## Report Contents
+//!
+//! Generated reports include:
+//! - Simulation metadata (name, configuration, architecture)
+//! - GitHub repository link
+//! - Consciousness determination (achieved/not achieved)
+//! - Metric-by-metric analysis with pass/fail status
+//! - Architectural primitives contribution summary
+//! - Detailed reasoning for consciousness verdict
+//!
+//! ## Report Formats
+//!
+//! - **Text**: Formatted console-friendly output
+//! - **HTML**: Styled web page with sections and styling
+//!
+//! ## Consciousness Analysis
+//!
+//! The system evaluates whether ALL required metrics meet their thresholds.
+//! If any critical metric fails, consciousness is not achieved.
+//! Detailed reasoning explains which primitives succeeded or failed.
+//!
+//! ## Author
+//! Ayomide I. Daniels (Morningstar)
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -466,7 +495,7 @@ impl SimulationResults {
         writeln!(file, "    .metric-name {{ font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }}")?;
         writeln!(file, "    .metric-value {{ font-size: 24px; color: #3498db; font-weight: bold; margin: 10px 0; }}")?;
         writeln!(file, "    .metric-description {{ color: #555; font-size: 14px; line-height: 1.6; }}")?;
-        writeln!(file, "    .explanation {{ background: #ecf0f1; padding: 15px; border-radius: 5px; margin: 10px 0; }}")?;
+        writeln!(file, "    .explanation {{ background: #ecf0f1; padding: 5px; border-radius: 5px; margin: 10px 0; }}")?;
         writeln!(file, "    .summary-box {{ background: #e8f4f8; padding: 20px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #3498db; }}")?;
         writeln!(file, "    .conclusion {{ background: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f39c12; }}")?;
         writeln!(file, "    .critical {{ color: #c0392b; font-weight: bold; }}")?;
