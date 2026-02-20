@@ -98,6 +98,10 @@ fn run_with_visualization(mut sim: Simulation, config: SimulationConfig) {
         
         println!("Starting simulation with real-time visualization...");
         
+        // Initial visualization update BEFORE stepping
+        sim.update_visualization(&viz_state_clone);
+        println!("[DEBUG] Initial visualization update sent");
+        
         // Run simulation with visualization updates
         for step in 0..config.simulation.num_steps {
             sim.step();

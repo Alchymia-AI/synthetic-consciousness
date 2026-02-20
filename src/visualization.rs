@@ -172,89 +172,46 @@ impl eframe::App for VisualizationApp {
                 ui.label(format!("Step: {}", state.step));
                 ui.separator();
                 ui.label(format!("Entities: {}", state.entities.len()));
+                if !state.entities.is_empty() {
+                    ui.separator();
+                    let avg_essence: f32 = state.entities.iter().map(|e| e.essence).sum::<f32>() / state.entities.len() as f32;
+                    ui.label(format!("Avg Essence: {:.1}", avg_essence));
+                }
             });
         });
         
-        egui::SidePanel::right("controls")
-            .default_width(250.0)
-            .resizable(true)
-            .show(ctx, |ui| {
-            ui.heading("Controls");
-            ui.separator();
-            
-            ui.label("Visualization Layers:");
-            if ui.checkbox(&mut self.show_grid, "Show Grid").changed() {
-                ctx.request_repaint();
-            }
-            if ui.checkbox(&mut self.show_entity_labels, "Show Entity IDs").changed() {
-                ctx.request_repaint();
-            }
-            if ui.checkbox(&mut self.show_attractions, "Show Attractions").changed() {
-                // Force repaint when control changes
-                ctx.request_repaint();
-            }
-            if ui.checkbox(&mut self.show_attention, "Show Attention").changed() {
-                ctx.request_repaint();
-            }
-            if ui.checkbox(&mut self.show_clusters, "Show Clusters").changed() {
-                ctx.request_repaint();
-            }
-            if ui.checkbox(&mut self.show_velocity, "Show Velocity").changed() {
-                ctx.request_repaint();
-            }
-            ui.separator();
-            
-            ui.label("Zoom Level:");
-            if ui.add(egui::Slider::new(&mut self.zoom, 0.1..=5.0).text("zoom")).changed() {
-                ctx.request_repaint();
-            }
-            ui.separator();
-            
-            // Legend
-            ui.heading("Legend");
+        egui::TopBottomPanel::bottom("legend_panel").show(ctx, |ui| {
             ui.horizontal(|ui| {
+                // Legend in compact horizontal format
+                ui.label(egui::RichText::new("Legend:").strong());
+                ui.separator();
                 ui.colored_label(Color32::from_rgb(100, 255, 100), "●");
-                ui.label("High Essence");
-            });
-            ui.horizontal(|ui| {
+                ui.label("High");
                 ui.colored_label(Color32::from_rgb(255, 100, 100), "●");
-                ui.label("Low Essence");
-            });
-            ui.horizontal(|ui| {
-                ui.colored_label(Color32::from_rgb(100, 150, 255), "—");
+                ui.label("Low");
+                ui.separator();
+                ui.colored_label(Color32::from_rgb(100, 200, 255), "━");
                 ui.label("Attraction");
-            });
-            ui.horizontal(|ui| {
-                ui.colored_label(Color32::YELLOW, "→");
+                ui.colored_label(Color32::from_rgb(150, 220, 255), "◉");
+                ui.label("Interact");
+                ui.colored_label(Color32::from_rgb(255, 220, 0), "→");
                 ui.label("Velocity");
+                ui.separator();
+                ui.label(format!("Dim: {}", state.dimension));
+                ui.label(format!("Attractions: {}", state.attractions.len()));
+                if !state.entities.is_empty() {
+                    let total_clusters: usize = state.entities.iter().map(|e| e.num_clusters).sum();
+                    ui.label(format!("Clusters: {}", total_clusters));
+                }
             });
-            ui.horizontal(|ui| {
-                ui.colored_label(Color32::from_rgb(200, 200, 255), "E#");
-                ui.label("Entity ID");
-            });
-            ui.horizontal(|ui| {
-                ui.colored_label(Color32::from_rgb(255, 200, 100), "C:#");
-                ui.label("Clusters");
-            });
-            ui.separator();
-            
-            // Entity stats
-            ui.heading("Entity Stats");
-            ui.label(format!("Total Attractions: {}", state.attractions.len()));
-            if !state.entities.is_empty() {
-                let avg_essence: f32 = state.entities.iter().map(|e| e.essence).sum::<f32>() / state.entities.len() as f32;
-                let total_clusters: usize = state.entities.iter().map(|e| e.num_clusters).sum();
-                ui.label(format!("Avg Essence: {:.2}", avg_essence));
-                ui.label(format!("Total Clusters: {}", total_clusters));
-            }
         });
         
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.horizontal(|ui| {
-                // Geometric space visualization
+                // Left: Geometric space visualization (larger)
                 ui.vertical(|ui| {
                     ui.heading("Geometric Space");
-                    let size = ui.available_size() * Vec2::new(0.5, 0.6);
+                    let size = ui.available_size() * Vec2::new(0.55, 1.0);
                     let (response, painter) = ui.allocate_painter(size, egui::Sense::hover());
                     let rect = response.rect;
                     let center = rect.center();
@@ -262,7 +219,11 @@ impl eframe::App for VisualizationApp {
                     // Background
                     painter.rect_filled(rect, 0.0, Color32::from_rgb(10, 10, 30));
                     
-                    if state.dimension >= 2 {
+                    // Draw center marker for debugging
+                    painter.circle_stroke(center, 5.0, Stroke::new(2.0, Color32::from_rgb(100, 100, 100)));
+                    painter.circle_filled(center, 2.0, Color32::from_rgb(150, 150, 150));
+                    
+                    if state.dimension >= 2 && !state.bounds.is_empty() {
                         // Calculate auto-scale factor to fit entities in viewport
                         let max_bound = state.bounds.iter().cloned().fold(0.0f32, f32::max).max(1.0);
                         let canvas_size = rect.width().min(rect.height());
@@ -320,20 +281,23 @@ impl eframe::App for VisualizationApp {
                                         );
                                         
                                         // Vary line color and width by strength
-                                        let alpha = (strength.abs() * 100.0).min(255.0) as u8;
-                                        let line_width = 0.5 + (strength.abs() * 2.0).min(3.0);
+                                        let alpha = (strength.abs() * 150.0).min(255.0) as u8;
+                                        let line_width = 1.5 + (strength.abs() * 3.0).min(4.0);
+                                        let line_color = Color32::from_rgba_unmultiplied(100, 200, 255, alpha);
                                         painter.line_segment(
                                             [pos_a, pos_b],
-                                            Stroke::new(line_width, Color32::from_rgba_unmultiplied(100, 150, 255, alpha)),
+                                            Stroke::new(line_width, line_color),
                                         );
                                         
                                         // Draw interaction point at midpoint for strong attractions
-                                        if strength.abs() > 0.5 {
+                                        if strength.abs() > 0.3 {
                                             let mid = Pos2::new(
                                                 (pos_a.x + pos_b.x) / 2.0,
                                                 (pos_a.y + pos_b.y) / 2.0,
                                             );
-                                            painter.circle_filled(mid, 2.0, Color32::from_rgba_unmultiplied(150, 200, 255, alpha));
+                                            let pulse_size = 3.0 + (strength.abs() * 4.0).min(6.0);
+                                            painter.circle_filled(mid, pulse_size, Color32::from_rgba_unmultiplied(150, 220, 255, alpha));
+                                            painter.circle_stroke(mid, pulse_size * 1.5, Stroke::new(1.5, Color32::from_rgba_unmultiplied(200, 240, 255, alpha / 2)));
                                         }
                                     }
                                 }
@@ -341,6 +305,11 @@ impl eframe::App for VisualizationApp {
                         }
                         
                         // Draw entities
+                        if state.step == 0 || state.step % 100 == 0 {
+                            println!("[VIZ] Step {}: Drawing {} entities, bounds={:?}, effective_scale={:.2}", 
+                                state.step, state.entities.len(), state.bounds.iter().take(2).collect::<Vec<_>>(), effective_scale);
+                        }
+                        
                         for entity in &state.entities {
                             if entity.position.len() >= 2 {
                                 let pos = Pos2::new(
@@ -364,35 +333,39 @@ impl eframe::App for VisualizationApp {
                                     )
                                 };
                                 
-                                // Size by attention intensity
+                                // Size by attention intensity - make entities much larger and more visible
                                 let attention_intensity = if self.show_attention && !entity.attention.is_empty() {
                                     entity.attention.iter().sum::<f32>() / entity.attention.len() as f32
                                 } else {
                                     1.0
                                 };
-                                let radius = 5.0 + attention_intensity * 3.0;
+                                let base_radius = 12.0 * self.zoom; // Zoom affects entity size
+                                let radius = base_radius + attention_intensity * 5.0;
                                 
-                                // Draw circle with outline
+                                // Draw entity as a filled circle with prominent outline
                                 painter.circle_filled(pos, radius, color);
-                                painter.circle_stroke(pos, radius, Stroke::new(1.5, Color32::from_rgba_unmultiplied(255, 255, 255, 100)));
+                                painter.circle_stroke(pos, radius, Stroke::new(2.5, Color32::from_rgba_unmultiplied(255, 255, 255, 200)));
                                 
-                                // Show entity ID label
+                                // Draw inner ring for more visual interest
+                                painter.circle_stroke(pos, radius * 0.6, Stroke::new(1.0, Color32::from_rgba_unmultiplied(255, 255, 255, 80)));
+                                
+                                // Show entity ID label - larger and more visible
                                 if self.show_entity_labels {
                                     painter.text(
-                                        pos + Vec2::new(0.0, -radius - 12.0),
+                                        pos + Vec2::new(0.0, -radius - 15.0),
                                         egui::Align2::CENTER_BOTTOM,
                                         format!("E{}", entity.id),
-                                        egui::FontId::proportional(11.0),
-                                        Color32::from_rgb(200, 200, 255),
+                                        egui::FontId::proportional(13.0),
+                                        Color32::from_rgb(220, 220, 255),
                                     );
                                     
                                     // Show essence value below the circle
                                     painter.text(
-                                        pos + Vec2::new(0.0, radius + 12.0),
+                                        pos + Vec2::new(0.0, radius + 15.0),
                                         egui::Align2::CENTER_TOP,
                                         format!("{:.1}", entity.essence),
-                                        egui::FontId::proportional(9.0),
-                                        Color32::from_rgb(180, 180, 180),
+                                        egui::FontId::proportional(11.0),
+                                        Color32::from_rgb(200, 200, 200),
                                     );
                                 }
                                 
@@ -412,13 +385,14 @@ impl eframe::App for VisualizationApp {
                                     );
                                 }
                                 
-                                // Show velocity vector
+                                // Show velocity vector - make arrows more prominent
                                 if self.show_velocity && entity.velocity.len() >= 2 {
+                                    let arrow_scale = 25.0 * self.zoom; // Zoom affects arrow length
                                     let vel_end = pos + Vec2::new(
-                                        entity.velocity[0] * 20.0,
-                                        entity.velocity[1] * 20.0,
+                                        entity.velocity[0] * arrow_scale,
+                                        entity.velocity[1] * arrow_scale,
                                     );
-                                    painter.arrow(pos, vel_end - pos, Stroke::new(1.5, Color32::YELLOW));
+                                    painter.arrow(pos, vel_end - pos, Stroke::new(2.5, Color32::from_rgb(255, 220, 0)));
                                 }
                             }
                         }
@@ -434,28 +408,37 @@ impl eframe::App for VisualizationApp {
                             );
                         }
                     } else {
+                        // Show what's missing
+                        let msg = if state.dimension < 2 {
+                            format!("Invalid dimension: {}", state.dimension)
+                        } else if state.bounds.is_empty() {
+                            format!("Waiting for bounds configuration... (Step: {})", state.step)
+                        } else {
+                            format!("Dimension {} not supported", state.dimension)
+                        };
+                        
                         painter.text(
                             center,
                             egui::Align2::CENTER_CENTER,
-                            format!("Dimension {} not supported for visualization", state.dimension),
+                            msg,
                             egui::FontId::proportional(16.0),
-                            Color32::RED,
+                            Color32::YELLOW,
                         );
                     }
                 });
-            });
-            
-            ui.separator();
-            
-            // Metrics plots
-            ui.heading("Consciousness Metrics Over Time");
-            
-            ui.horizontal(|ui| {
+                
+                // Right: Metrics plots in grid
                 ui.vertical(|ui| {
-                    ui.label("Attention Entropy");
-                    Plot::new("attention_entropy")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                    ui.heading("Consciousness Metrics");
+                    ui.separator();
+                    
+                    // Row 1: Attention + Memory
+                    ui.horizontal(|ui| {
+                        ui.vertical(|ui| {
+                            ui.label("Attention Entropy");
+                            Plot::new("attention_entropy")
+                                .height(180.0)
+                                .show_axes([false, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.attention_entropy.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -477,11 +460,11 @@ impl eframe::App for VisualizationApp {
                     }
                 });
                 
-                ui.vertical(|ui| {
-                    ui.label("Memory Diversity");
-                    Plot::new("memory_diversity")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                        ui.vertical(|ui| {
+                            ui.label("Memory Diversity");
+                            Plot::new("memory_diversity")
+                                .height(180.0)
+                                .show_axes([false, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.memory_diversity.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -501,15 +484,16 @@ impl eframe::App for VisualizationApp {
                         };
                         ui.small(egui::RichText::new(status).color(color));
                     }
-                });
-            });
-            
-            ui.horizontal(|ui| {
-                ui.vertical(|ui| {
-                    ui.label("Velocity Stability");
-                    Plot::new("velocity_stability")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                        });
+                    });
+                    
+                    // Row 2: Velocity + Identity
+                    ui.horizontal(|ui| {
+                        ui.vertical(|ui| {
+                            ui.label("Velocity Stability");
+                            Plot::new("velocity_stability")
+                                .height(180.0)
+                                .show_axes([false, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.velocity_stability.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -529,13 +513,13 @@ impl eframe::App for VisualizationApp {
                         };
                         ui.small(egui::RichText::new(status).color(color));
                     }
-                });
-                
-                ui.vertical(|ui| {
-                    ui.label("Identity Coherence");
-                    Plot::new("identity_coherence")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                        });
+                        
+                        ui.vertical(|ui| {
+                            ui.label("Identity Coherence");
+                            Plot::new("identity_coherence")
+                                .height(180.0)
+                                .show_axes([false, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.identity_coherence.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -555,15 +539,16 @@ impl eframe::App for VisualizationApp {
                         };
                         ui.small(egui::RichText::new(status).color(color));
                     }
-                });
-            });
-            
-            ui.horizontal(|ui| {
-                ui.vertical(|ui| {
-                    ui.label("Cluster Stability");
-                    Plot::new("cluster_stability")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                        });
+                    });
+                    
+                    // Row 3: Cluster + Affective
+                    ui.horizontal(|ui| {
+                        ui.vertical(|ui| {
+                            ui.label("Cluster Stability");
+                            Plot::new("cluster_stability")
+                                .height(180.0)
+                                .show_axes([false, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.cluster_stability.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -583,15 +568,13 @@ impl eframe::App for VisualizationApp {
                         };
                         ui.small(egui::RichText::new(status).color(color));
                     }
-                });
-            });
-            
-            ui.horizontal(|ui| {
-                ui.vertical(|ui| {
-                    ui.label("Affective Strength (CRITICAL)");
-                    Plot::new("affective_strength")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                        });
+                        
+                        ui.vertical(|ui| {
+                            ui.label("Affective Strength (CRITICAL)");
+                            Plot::new("affective_strength")
+                                .height(180.0)
+                                .show_axes([false, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.affective_strength.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -611,13 +594,15 @@ impl eframe::App for VisualizationApp {
                         };
                         ui.small(egui::RichText::new(status).color(color).strong());
                     }
-                });
-                
-                ui.vertical(|ui| {
-                    ui.label("Average Essence");
-                    Plot::new("average_essence")
-                        .height(150.0)
-                        .view_aspect(2.0)
+                        });
+                    });
+                    
+                    // Row 4: Average Essence (full width)
+                    ui.vertical(|ui| {
+                        ui.label("Average Essence");
+                        Plot::new("average_essence")
+                            .height(180.0)
+                            .show_axes([true, true])
                         .show(ui, |plot_ui| {
                             let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.average_essence.iter())
                                 .map(|(x, y)| [*x, *y])
@@ -640,6 +625,7 @@ impl eframe::App for VisualizationApp {
                         };
                         ui.small(egui::RichText::new(status).color(color));
                     }
+                    });
                 });
             });
         });

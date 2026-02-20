@@ -484,6 +484,17 @@ impl Simulation {
             if let Some(metrics) = self.metrics_history.last() {
                 state.metrics.push(self.timestamp, metrics);
             }
+            
+            // Debug: print first update info
+            if self.timestamp == 0 {
+                println!("[DEBUG] First visualization update:");
+                println!("  Entities: {}", state.entities.len());
+                println!("  Dimension: {}", state.dimension);
+                println!("  Bounds: {:?}", state.bounds);
+                if !state.entities.is_empty() {
+                    println!("  First entity pos: {:?}", state.entities[0].position);
+                }
+            }
         }
     }
 }
