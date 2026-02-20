@@ -450,6 +450,7 @@ impl SimulationResults {
         writeln!(file, "    body {{ font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background: #f5f5f5; }}")?;
         writeln!(file, "    .container {{ max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}")?;
         writeln!(file, "    h1 {{ color: #1a3a52; border-bottom: 4px solid #3498db; padding-bottom: 15px; margin-bottom: 20px; }}")?;
+        writeln!(file, "    .underlined {{ border-bottom: 4px solid #3498db; padding-bottom: 15px; margin-bottom: 20px; }}")?;
         writeln!(file, "    h2 {{ color: #2c3e50; margin-top: 30px; border-left: 5px solid #3498db; padding-left: 15px; }}")?;
         writeln!(file, "    h3 {{ color: #34495e; margin-top: 15px; }}")?;
         writeln!(file, "    .score {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; border-radius: 10px; margin: 20px 0; }}")?;
@@ -466,29 +467,23 @@ impl SimulationResults {
         writeln!(file, "    .metric-value {{ font-size: 24px; color: #3498db; font-weight: bold; margin: 10px 0; }}")?;
         writeln!(file, "    .metric-description {{ color: #555; font-size: 14px; line-height: 1.6; }}")?;
         writeln!(file, "    .explanation {{ background: #ecf0f1; padding: 15px; border-radius: 5px; margin: 10px 0; }}")?;
-        writeln!(file, "    .summary-box {{ background: #e8f4f8; padding: 20px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #3498db; }}")?;
+        writeln!(file, "    .summary-box {{ background: #e8f4f8; padding: 20px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #3498db; }}")?;
         writeln!(file, "    .conclusion {{ background: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f39c12; }}")?;
         writeln!(file, "    .critical {{ color: #c0392b; font-weight: bold; }}")?;
         writeln!(file, "    a {{ color: #3498db; text-decoration: none; }}")?;
         writeln!(file, "    a:hover {{ text-decoration: underline; }}")?;
+        writeln!(file, "    .repo-link {{ text-align: left; color: #7f8c8d; font-size: 14px; margin-top: 10px; }}")?;
         writeln!(file, "    hr {{ border: none; border-top: 2px solid #ecf0f1; margin: 30px 0; }}")?;
         writeln!(file, "    @media print {{ body {{ background: white; }} .container {{ box-shadow: none; }} }}")?;
         writeln!(file, "  </style>")?;
         writeln!(file, "</head>")?;
         writeln!(file, "<body>")?;
         writeln!(file, "  <div class=\"container\">")?;
-        writeln!(file, "    <h1>Synthetic Consciousness Analysis Report</h1>")?;
-
-        // Project Information
-        writeln!(file, "    <h2>Project Information</h2>")?;
-        writeln!(file, "    <div class=\"summary-box\">")?;
-        writeln!(file, "      <p><strong>GitHub Repository:</strong> <a href=\"https://github.com/Alchymia-AI/synthetic-consciousness\" target=\"_blank\">https://github.com/Alchymia-AI/synthetic-consciousness</a></p>")?;
-        writeln!(file, "      <p><strong>Architecture Name:</strong> Geometric Consciousness Model</p>")?;
-        writeln!(file, "      <p><strong>Architecture Aim:</strong> Test if synthetic digital entities can achieve consciousness through geometric attraction dynamics, belief clustering, affective signaling, and identity coherence mechanisms.</p>")?;
-        writeln!(file, "    </div>")?;
+        writeln!(file, "    <h2 class=\"underlined\">Synthetic Consciousness Analysis Report</h2>")?;
+        writeln!(file, "    <p class=\"repo-link\"><a href=\"https://github.com/Alchymia-AI/synthetic-consciousness\" target=\"_blank\">https://github.com/Alchymia-AI/synthetic-consciousness</a></p>")?;
 
         // Simulation Overview
-        writeln!(file, "    <h2>Simulation Overview</h2>")?;
+        //writeln!(file, "    <h2>Simulation Overview</h2>")?;
         writeln!(file, "    <p><strong>Purpose:</strong> Test whether synthetic digital entities can achieve consciousness through simulated interactions.</p>")?;
         writeln!(file, "    <div class=\"summary-box\">")?;
         writeln!(file, "      <strong>Configuration:</strong> {} entities interacting over {} simulation steps ({:.1}s duration)", self.num_entities, self.num_steps, self.duration_seconds)?;
@@ -509,7 +504,6 @@ impl SimulationResults {
         writeln!(file, "    <p><strong>Requirement:</strong> <span class=\"critical\">ALL 6 criteria must pass for consciousness</span>. This is a strict standard reflecting the complexity of consciousness.</p>")?;
 
         // Detailed Analysis
-        writeln!(file, "    <h2>What This Means in Plain Language</h2>")?;
         writeln!(file, "    <div class=\"explanation\">")?;
         if self.consciousness_analysis.consciousness_achieved {
             writeln!(file, "      <h3>✓ Consciousness Detected</h3>")?;
