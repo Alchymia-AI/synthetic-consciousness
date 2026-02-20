@@ -2,11 +2,19 @@
 ║         SYNTHETIC CONSCIOUSNESS SIMULATION REPORT             ║
 ╚════════════════════════════════════════════════════════════════╝
 
+PROJECT INFORMATION
+─────────────────────────────────────────────────────────────────
+GitHub:              https://github.com/Alchymia-AI/synthetic-consciousness
+Architecture:        Geometric Consciousness Model
+Architecture Aim:    Test if synthetic digital entities can achieve consciousness
+                     through geometric attraction dynamics, belief clustering,
+                     affective signaling, and identity coherence mechanisms.
+
 SIMULATION METADATA
 ─────────────────────────────────────────────────────────────────
 Name:                Synthetic Consciousness Simulation
-Start Time:          2026-02-20T02:54:24.185855+01:00
-End Time:            2026-02-20T02:54:24.254867+01:00
+Start Time:          2026-02-20T02:59:37.967667+01:00
+End Time:            2026-02-20T02:59:38.051233+01:00
 Number of Entities:  10
 Number of Steps:     1000
 Duration:            10.00 seconds
@@ -54,9 +62,9 @@ ARCHITECTURAL PRIMITIVES & PASSED CRITERIA
 
 ✓ CLUSTER STABILITY (Memory Organization)
   Architectural Primitives:
-    • Belief Cluster Formation: 59418 clusters formed across simulation
+    • Belief Cluster Formation: 59196 clusters formed across simulation
     • Semantic Organization: Related beliefs grouped through affinity mechanisms
-    • Average clusters per entity: 5.94
+    • Average clusters per entity: 5.92
   Why this matters: Organized memory structure enables reasoning and inference
 
 
@@ -97,8 +105,8 @@ FINAL METRICS (with Interpretations)
 STEP-BY-STEP SUMMARY
 ─────────────────────────────────────────────────────────────────
 Total Attractions Fired: 45000
-Total Belief Clusters:   59418
-Avg Clusters per Entity: 5.94
+Total Belief Clusters:   59196
+Avg Clusters per Entity: 5.92
 Peak Affective Signal:   0.0000
 
 SELECTED STEPS (sampled)

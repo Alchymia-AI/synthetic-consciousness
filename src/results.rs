@@ -254,6 +254,16 @@ impl SimulationResults {
         writeln!(file, "╚════════════════════════════════════════════════════════════════╝")?;
         writeln!(file)?;
 
+        // Project Information
+        writeln!(file, "PROJECT INFORMATION")?;
+        writeln!(file, "─────────────────────────────────────────────────────────────────")?;
+        writeln!(file, "GitHub:              https://github.com/Alchymia-AI/synthetic-consciousness")?;
+        writeln!(file, "Architecture:        Geometric Consciousness Model")?;
+        writeln!(file, "Architecture Aim:    Test if synthetic digital entities can achieve consciousness")?;
+        writeln!(file, "                     through geometric attraction dynamics, belief clustering,")?;
+        writeln!(file, "                     affective signaling, and identity coherence mechanisms.")?;
+        writeln!(file)?;
+
         // Detailed metadata
         writeln!(file, "SIMULATION METADATA")?;
         writeln!(file, "─────────────────────────────────────────────────────────────────")?;
@@ -459,6 +469,8 @@ impl SimulationResults {
         writeln!(file, "    .summary-box {{ background: #e8f4f8; padding: 20px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #3498db; }}")?;
         writeln!(file, "    .conclusion {{ background: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f39c12; }}")?;
         writeln!(file, "    .critical {{ color: #c0392b; font-weight: bold; }}")?;
+        writeln!(file, "    a {{ color: #3498db; text-decoration: none; }}")?;
+        writeln!(file, "    a:hover {{ text-decoration: underline; }}")?;
         writeln!(file, "    hr {{ border: none; border-top: 2px solid #ecf0f1; margin: 30px 0; }}")?;
         writeln!(file, "    @media print {{ body {{ background: white; }} .container {{ box-shadow: none; }} }}")?;
         writeln!(file, "  </style>")?;
@@ -466,6 +478,14 @@ impl SimulationResults {
         writeln!(file, "<body>")?;
         writeln!(file, "  <div class=\"container\">")?;
         writeln!(file, "    <h1>Synthetic Consciousness Analysis Report</h1>")?;
+
+        // Project Information
+        writeln!(file, "    <h2>Project Information</h2>")?;
+        writeln!(file, "    <div class=\"summary-box\">")?;
+        writeln!(file, "      <p><strong>GitHub Repository:</strong> <a href=\"https://github.com/Alchymia-AI/synthetic-consciousness\" target=\"_blank\">https://github.com/Alchymia-AI/synthetic-consciousness</a></p>")?;
+        writeln!(file, "      <p><strong>Architecture Name:</strong> Geometric Consciousness Model</p>")?;
+        writeln!(file, "      <p><strong>Architecture Aim:</strong> Test if synthetic digital entities can achieve consciousness through geometric attraction dynamics, belief clustering, affective signaling, and identity coherence mechanisms.</p>")?;
+        writeln!(file, "    </div>")?;
 
         // Simulation Overview
         writeln!(file, "    <h2>Simulation Overview</h2>")?;
