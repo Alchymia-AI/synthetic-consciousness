@@ -5,8 +5,8 @@
 SIMULATION METADATA
 ─────────────────────────────────────────────────────────────────
 Name:                Synthetic Consciousness Simulation
-Start Time:          2026-02-20T02:51:56.600628+01:00
-End Time:            2026-02-20T02:51:56.678030+01:00
+Start Time:          2026-02-20T02:54:24.185855+01:00
+End Time:            2026-02-20T02:54:24.254867+01:00
 Number of Entities:  10
 Number of Steps:     1000
 Duration:            10.00 seconds
@@ -54,9 +54,9 @@ ARCHITECTURAL PRIMITIVES & PASSED CRITERIA
 
 ✓ CLUSTER STABILITY (Memory Organization)
   Architectural Primitives:
-    • Belief Cluster Formation: 58131 clusters formed across simulation
+    • Belief Cluster Formation: 59418 clusters formed across simulation
     • Semantic Organization: Related beliefs grouped through affinity mechanisms
-    • Average clusters per entity: 5.81
+    • Average clusters per entity: 5.94
   Why this matters: Organized memory structure enables reasoning and inference
 
 
@@ -79,7 +79,7 @@ FINAL METRICS (with Interpretations)
    → State vector consistency across time (threshold: ≥0.7)
    → Higher = stable self-representation
 
-5. Cluster Stability: 0.5900
+5. Cluster Stability: 0.6000
    → Number of belief clusters formed (threshold: ≥0.5)
    → Indicates semantic memory organization
 
@@ -97,8 +97,8 @@ FINAL METRICS (with Interpretations)
 STEP-BY-STEP SUMMARY
 ─────────────────────────────────────────────────────────────────
 Total Attractions Fired: 45000
-Total Belief Clusters:   58131
-Avg Clusters per Entity: 5.81
+Total Belief Clusters:   59418
+Avg Clusters per Entity: 5.94
 Peak Affective Signal:   0.0000
 
 SELECTED STEPS (sampled)

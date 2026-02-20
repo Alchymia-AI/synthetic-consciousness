@@ -581,7 +581,7 @@ impl SimulationResults {
             writeln!(file, "    </div>")?;
 
             writeln!(file, "    <div class=\"metric-box\">")?;
-            writeln!(file, "      <div class=\"metric-name\">6. Affective Strength (Emotional Capacity) - *** CRITICAL ***</div>")?;
+            writeln!(file, "      <div class=\"metric-name\">6. Affective Strength (Emotional Capacity)</div>")?;
             writeln!(file, "      <div class=\"metric-value\">{:.4} (threshold: ≥0.01)</div>", m.affective_strength)?;
             writeln!(file, "      <div class=\"metric-description\">")?;
             writeln!(file, "        <strong>What it measures:</strong> Magnitude of emotional responses<br>")?;
@@ -721,7 +721,7 @@ impl SimulationResults {
                     writeln!(file)?;
                 }
                 "Affective Strength" => {
-                    writeln!(file, "✓ AFFECTIVE STRENGTH (Emotional Capacity) - *** CRITICAL ***")?;
+                    writeln!(file, "✓ AFFECTIVE STRENGTH (Emotional Capacity)")?;
                     writeln!(file, "  Architectural Primitives:")?;
                     writeln!(file, "    • Affective Signals: Generated within belief clusters (-5 to +5 range)")?;
                     writeln!(file, "    • Peak signal magnitude: {:.4}", self.max_affective_signal())?;
