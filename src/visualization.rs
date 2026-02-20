@@ -34,6 +34,7 @@ pub struct VisualizationState {
     pub attractions: Vec<(usize, usize, f32)>, // (idx_a, idx_b, strength)
     pub metrics: MetricsHistory,
     pub dimension: usize,
+    pub bounds: Vec<f32>, // Spatial bounds from geometry config
 }
 
 /// Snapshot of a single entity's state for visualization.
@@ -127,6 +128,10 @@ pub struct VisualizationApp {
     show_clusters: bool,
     /// Toggle: show velocity vectors as arrows
     show_velocity: bool,
+    /// Toggle: show entity ID labels
+    show_entity_labels: bool,
+    /// Toggle: show grid lines for spatial reference
+    show_grid: bool,
     /// Zoom level for geometric space (0.1 to 5.0)
     zoom: f32,
 }
@@ -146,6 +151,8 @@ impl VisualizationApp {
             show_attention: true,
             show_clusters: true,
             show_velocity: true,
+            show_entity_labels: true,
+            show_grid: true,
             zoom: 1.0,
         }
     }
@@ -176,6 +183,12 @@ impl eframe::App for VisualizationApp {
             ui.separator();
             
             ui.label("Visualization Layers:");
+            if ui.checkbox(&mut self.show_grid, "Show Grid").changed() {
+                ctx.request_repaint();
+            }
+            if ui.checkbox(&mut self.show_entity_labels, "Show Entity IDs").changed() {
+                ctx.request_repaint();
+            }
             if ui.checkbox(&mut self.show_attractions, "Show Attractions").changed() {
                 // Force repaint when control changes
                 ctx.request_repaint();
@@ -208,8 +221,20 @@ impl eframe::App for VisualizationApp {
                 ui.label("Low Essence");
             });
             ui.horizontal(|ui| {
-                ui.colored_label(Color32::from_rgb(100, 100, 255), "—");
+                ui.colored_label(Color32::from_rgb(100, 150, 255), "—");
                 ui.label("Attraction");
+            });
+            ui.horizontal(|ui| {
+                ui.colored_label(Color32::YELLOW, "→");
+                ui.label("Velocity");
+            });
+            ui.horizontal(|ui| {
+                ui.colored_label(Color32::from_rgb(200, 200, 255), "E#");
+                ui.label("Entity ID");
+            });
+            ui.horizontal(|ui| {
+                ui.colored_label(Color32::from_rgb(255, 200, 100), "C:#");
+                ui.label("Clusters");
             });
             ui.separator();
             
@@ -238,25 +263,78 @@ impl eframe::App for VisualizationApp {
                     painter.rect_filled(rect, 0.0, Color32::from_rgb(10, 10, 30));
                     
                     if state.dimension >= 2 {
+                        // Calculate auto-scale factor to fit entities in viewport
+                        let max_bound = state.bounds.iter().cloned().fold(0.0f32, f32::max).max(1.0);
+                        let canvas_size = rect.width().min(rect.height());
+                        let auto_scale = (canvas_size * 0.4) / max_bound; // Use 40% of canvas for bounds
+                        let effective_scale = auto_scale * self.zoom;
+                        
+                        // Draw grid lines to show the plane of existence
+                        if self.show_grid {
+                            let grid_spacing = auto_scale * 5.0; // Grid every 5 units in world space
+                            let grid_color = Color32::from_rgba_unmultiplied(40, 40, 60, 100);
+                            
+                            // Vertical grid lines
+                            let mut x = center.x % grid_spacing;
+                            while x < rect.max.x {
+                                painter.line_segment(
+                                    [Pos2::new(x, rect.min.y), Pos2::new(x, rect.max.y)],
+                                    Stroke::new(0.5, grid_color),
+                                );
+                                x += grid_spacing;
+                            }
+                            
+                            // Horizontal grid lines
+                            let mut y = center.y % grid_spacing;
+                            while y < rect.max.y {
+                                painter.line_segment(
+                                    [Pos2::new(rect.min.x, y), Pos2::new(rect.max.x, y)],
+                                    Stroke::new(0.5, grid_color),
+                                );
+                                y += grid_spacing;
+                            }
+                            
+                            // Draw center axes
+                            painter.line_segment(
+                                [Pos2::new(center.x, rect.min.y), Pos2::new(center.x, rect.max.y)],
+                                Stroke::new(1.0, Color32::from_rgba_unmultiplied(100, 100, 150, 150)),
+                            );
+                            painter.line_segment(
+                                [Pos2::new(rect.min.x, center.y), Pos2::new(rect.max.x, center.y)],
+                                Stroke::new(1.0, Color32::from_rgba_unmultiplied(100, 100, 150, 150)),
+                            );
+                        }
+                        
                         // Draw attractions
                         if self.show_attractions {
                             for (idx_a, idx_b, strength) in &state.attractions {
                                 if let (Some(a), Some(b)) = (state.entities.get(*idx_a), state.entities.get(*idx_b)) {
                                     if a.position.len() >= 2 && b.position.len() >= 2 {
                                         let pos_a = Pos2::new(
-                                            center.x + a.position[0] * self.zoom * 50.0,
-                                            center.y + a.position[1] * self.zoom * 50.0,
+                                            center.x + a.position[0] * effective_scale,
+                                            center.y + a.position[1] * effective_scale,
                                         );
                                         let pos_b = Pos2::new(
-                                            center.x + b.position[0] * self.zoom * 50.0,
-                                            center.y + b.position[1] * self.zoom * 50.0,
+                                            center.x + b.position[0] * effective_scale,
+                                            center.y + b.position[1] * effective_scale,
                                         );
                                         
+                                        // Vary line color and width by strength
                                         let alpha = (strength.abs() * 100.0).min(255.0) as u8;
+                                        let line_width = 0.5 + (strength.abs() * 2.0).min(3.0);
                                         painter.line_segment(
                                             [pos_a, pos_b],
-                                            Stroke::new(1.0, Color32::from_rgba_unmultiplied(100, 100, 255, alpha)),
+                                            Stroke::new(line_width, Color32::from_rgba_unmultiplied(100, 150, 255, alpha)),
                                         );
+                                        
+                                        // Draw interaction point at midpoint for strong attractions
+                                        if strength.abs() > 0.5 {
+                                            let mid = Pos2::new(
+                                                (pos_a.x + pos_b.x) / 2.0,
+                                                (pos_a.y + pos_b.y) / 2.0,
+                                            );
+                                            painter.circle_filled(mid, 2.0, Color32::from_rgba_unmultiplied(150, 200, 255, alpha));
+                                        }
                                     }
                                 }
                             }
@@ -266,8 +344,8 @@ impl eframe::App for VisualizationApp {
                         for entity in &state.entities {
                             if entity.position.len() >= 2 {
                                 let pos = Pos2::new(
-                                    center.x + entity.position[0] * self.zoom * 50.0,
-                                    center.y + entity.position[1] * self.zoom * 50.0,
+                                    center.x + entity.position[0] * effective_scale,
+                                    center.y + entity.position[1] * effective_scale,
                                 );
                                 
                                 // Color by essence (0-10 scale)
@@ -294,16 +372,43 @@ impl eframe::App for VisualizationApp {
                                 };
                                 let radius = 5.0 + attention_intensity * 3.0;
                                 
+                                // Draw circle with outline
                                 painter.circle_filled(pos, radius, color);
+                                painter.circle_stroke(pos, radius, Stroke::new(1.5, Color32::from_rgba_unmultiplied(255, 255, 255, 100)));
+                                
+                                // Show entity ID label
+                                if self.show_entity_labels {
+                                    painter.text(
+                                        pos + Vec2::new(0.0, -radius - 12.0),
+                                        egui::Align2::CENTER_BOTTOM,
+                                        format!("E{}", entity.id),
+                                        egui::FontId::proportional(11.0),
+                                        Color32::from_rgb(200, 200, 255),
+                                    );
+                                    
+                                    // Show essence value below the circle
+                                    painter.text(
+                                        pos + Vec2::new(0.0, radius + 12.0),
+                                        egui::Align2::CENTER_TOP,
+                                        format!("{:.1}", entity.essence),
+                                        egui::FontId::proportional(9.0),
+                                        Color32::from_rgb(180, 180, 180),
+                                    );
+                                }
                                 
                                 // Show cluster count
                                 if self.show_clusters && entity.num_clusters > 0 {
+                                    let cluster_pos = if self.show_entity_labels {
+                                        pos + Vec2::new(radius + 2.0, 0.0)
+                                    } else {
+                                        pos + Vec2::new(radius + 2.0, 0.0)
+                                    };
                                     painter.text(
-                                        pos + Vec2::new(radius + 2.0, 0.0),
+                                        cluster_pos,
                                         egui::Align2::LEFT_CENTER,
-                                        format!("{}", entity.num_clusters),
+                                        format!("C:{}", entity.num_clusters),
                                         egui::FontId::proportional(10.0),
-                                        Color32::WHITE,
+                                        Color32::from_rgb(255, 200, 100),
                                     );
                                 }
                                 
@@ -317,13 +422,24 @@ impl eframe::App for VisualizationApp {
                                 }
                             }
                         }
+                        
+                        // Show debug info if no entities
+                        if state.entities.is_empty() {
+                            painter.text(
+                                center,
+                                egui::Align2::CENTER_CENTER,
+                                format!("Waiting for entities... (Step: {})", state.step),
+                                egui::FontId::proportional(14.0),
+                                Color32::YELLOW,
+                            );
+                        }
                     } else {
                         painter.text(
                             center,
                             egui::Align2::CENTER_CENTER,
-                            "No spatial data available",
+                            format!("Dimension {} not supported for visualization", state.dimension),
                             egui::FontId::proportional(16.0),
-                            Color32::WHITE,
+                            Color32::RED,
                         );
                     }
                 });

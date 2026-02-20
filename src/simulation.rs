@@ -477,6 +477,8 @@ impl Simulation {
             state.step = self.timestamp;
             state.entities = entity_states;
             state.attractions = attractions;
+            state.dimension = self.config.geometry.dimension;
+            state.bounds = self.config.geometry.bounds.clone();
             
             // Update metrics history
             if let Some(metrics) = self.metrics_history.last() {

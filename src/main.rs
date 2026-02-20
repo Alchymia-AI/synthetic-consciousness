@@ -86,6 +86,7 @@ fn run_with_visualization(mut sim: Simulation, config: SimulationConfig) {
     // Create shared visualization state
     let viz_state = Arc::new(Mutex::new(VisualizationState {
         dimension: config.geometry.dimension,
+        bounds: config.geometry.bounds.clone(),
         ..Default::default()
     }));
     
