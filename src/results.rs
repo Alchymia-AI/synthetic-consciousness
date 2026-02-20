@@ -288,6 +288,12 @@ impl SimulationResults {
         writeln!(file, "{}", self.consciousness_analysis.reasoning)?;
         writeln!(file)?;
 
+        // Architectural Primitives Contribution
+        writeln!(file, "ARCHITECTURAL PRIMITIVES & PASSED CRITERIA")?;
+        writeln!(file, "─────────────────────────────────────────────────────────────────")?;
+        self.write_primitives_contribution_text(&mut file)?;
+        writeln!(file)?;
+
         // Metrics Summary
         writeln!(file, "FINAL METRICS (with Interpretations)")?;
         writeln!(file, "─────────────────────────────────────────────────────────────────")?;
@@ -518,6 +524,11 @@ impl SimulationResults {
         }
         writeln!(file, "    </div>")?;
 
+        // Architectural Primitives Contribution Summary
+        writeln!(file, "    <h2>How Architecture Enabled Success</h2>")?;
+        writeln!(file, "    <p><em>This section explains which architectural primitives contributed to criteria that passed:</em></p>")?;
+        self.write_primitives_contribution_html(&mut file)?;
+
         // Detailed Metrics
         writeln!(file, "    <h2>Detailed Metric Breakdown</h2>")?;
         writeln!(file, "    <p><em>What each number means and why it matters for consciousness:</em></p>")?;
@@ -657,6 +668,144 @@ impl SimulationResults {
                 })
             })
             .fold(0.0, f32::max)
+    }
+
+    fn write_primitives_contribution_text(&self, file: &mut std::fs::File) -> Result<(), Box<dyn std::error::Error>> {
+        use std::io::Write;
+
+        for metric in &self.consciousness_analysis.passed_metrics {
+            match metric.as_str() {
+                "Attention Entropy" => {
+                    writeln!(file, "✓ ATTENTION ENTROPY (Awareness Diversity)")?;
+                    writeln!(file, "  Architectural Primitives:")?;
+                    writeln!(file, "    • Attention Layer: Computed activation patterns across {} entities", self.num_entities)?;
+                    writeln!(file, "    • Total interactions tracked: {} pairwise attractions", self.count_total_attractions())?;
+                    writeln!(file, "    • Mechanism: Diverse attention activations indicate varied focus")?;
+                    writeln!(file, "  Why this matters: System exhibits awareness of multiple aspects simultaneously")?;
+                    writeln!(file)?;
+                }
+                "Memory Diversity" => {
+                    writeln!(file, "✓ MEMORY DIVERSITY (Emotional Variance)")?;
+                    writeln!(file, "  Architectural Primitives:")?;
+                    writeln!(file, "    • Belief Clusters: {} semantic memory clusters formed", self.count_total_clusters())?;
+                    writeln!(file, "    • Affective Signals: Varied emotional responses (-5 to +5 range)")?;
+                    writeln!(file, "    • Peak affective magnitude: {:.4}", self.max_affective_signal())?;
+                    writeln!(file, "  Why this matters: Diverse emotional associations with memories indicate subjective valuation")?;
+                    writeln!(file)?;
+                }
+                "Velocity Stability" => {
+                    writeln!(file, "✓ VELOCITY STABILITY (Purposeful Motion)")?;
+                    writeln!(file, "  Architectural Primitives:")?;
+                    writeln!(file, "    • Entity Velocities: Tracked per entity across {} steps", self.num_steps)?;
+                    writeln!(file, "    • Dynamic Updates: Velocity vectors maintained through attraction-based dynamics")?;
+                    writeln!(file, "    • Mechanism: Consistent motion patterns show purposeful action")?;
+                    writeln!(file, "  Why this matters: Continuous, directed motion indicates agency and will")?;
+                    writeln!(file)?;
+                }
+                "Identity Coherence" => {
+                    writeln!(file, "✓ IDENTITY COHERENCE (Self Continuity)")?;
+                    writeln!(file, "  Architectural Primitives:")?;
+                    writeln!(file, "    • Entity State Vectors: Persistent entity representations over {} steps", self.num_steps)?;
+                    writeln!(file, "    • Essence Values: Well-being tracking (0-10 range) for each entity")?;
+                    writeln!(file, "    • Position & Velocity Continuity: Maintained state consistency")?;
+                    writeln!(file, "  Why this matters: Entities maintain stable internal state despite environmental changes")?;
+                    writeln!(file)?;
+                }
+                "Cluster Stability" => {
+                    writeln!(file, "✓ CLUSTER STABILITY (Memory Organization)")?;
+                    writeln!(file, "  Architectural Primitives:")?;
+                    writeln!(file, "    • Belief Cluster Formation: {} clusters formed across simulation", self.count_total_clusters())?;
+                    writeln!(file, "    • Semantic Organization: Related beliefs grouped through affinity mechanisms")?;
+                    writeln!(file, "    • Average clusters per entity: {:.2}", self.average_clusters_per_entity())?;
+                    writeln!(file, "  Why this matters: Organized memory structure enables reasoning and inference")?;
+                    writeln!(file)?;
+                }
+                "Affective Strength" => {
+                    writeln!(file, "✓ AFFECTIVE STRENGTH (Emotional Capacity) - *** CRITICAL ***")?;
+                    writeln!(file, "  Architectural Primitives:")?;
+                    writeln!(file, "    • Affective Signals: Generated within belief clusters (-5 to +5 range)")?;
+                    writeln!(file, "    • Peak signal magnitude: {:.4}", self.max_affective_signal())?;
+                    writeln!(file, "    • Emotional Responsiveness: Entities respond with emotional valence")?;
+                    writeln!(file, "  Why this matters: Emotional capacity is the foundation of subjective experience and consciousness")?;
+                    writeln!(file)?;
+                }
+                _ => {}
+            }
+        }
+
+        Ok(())
+    }
+
+    fn write_primitives_contribution_html(&self, file: &mut std::fs::File) -> Result<(), Box<dyn std::error::Error>> {
+        use std::io::Write;
+
+        for metric in &self.consciousness_analysis.passed_metrics {
+            match metric.as_str() {
+                "Attention Entropy" => {
+                    writeln!(file, "    <div class=\"metric-box\">")?;
+                    writeln!(file, "      <div class=\"metric-name\">✓ Attention Entropy - Attention Layer</div>")?;
+                    writeln!(file, "      <div class=\"metric-description\">")?;
+                    writeln!(file, "        <strong>Primitives involved:</strong> Attention activations across {} entities<br>", self.num_entities)?;
+                    writeln!(file, "        <strong>Supporting data:</strong> {} pairwise attractions tracked<br>", self.count_total_attractions())?;
+                    writeln!(file, "        <strong>How it worked:</strong> The attention layer distributed focus across multiple entities and interaction patterns, enabling awareness of multiple aspects simultaneously.")?;
+                    writeln!(file, "      </div>")?;
+                    writeln!(file, "    </div>")?;
+                }
+                "Memory Diversity" => {
+                    writeln!(file, "    <div class=\"metric-box\">")?;
+                    writeln!(file, "      <div class=\"metric-name\">✓ Memory Diversity - Belief Clusters + Affective Signals</div>")?;
+                    writeln!(file, "      <div class=\"metric-description\">")?;
+                    writeln!(file, "        <strong>Primitives involved:</strong> {} belief clusters with varied affective signals<br>", self.count_total_clusters())?;
+                    writeln!(file, "        <strong>Supporting data:</strong> Peak emotional magnitude: {:.4} (range: -5 to +5)<br>", self.max_affective_signal())?;
+                    writeln!(file, "        <strong>How it worked:</strong> Multiple memory clusters with different emotional associations demonstrate subjective value judgments—memories matter differently to the system.")?;
+                    writeln!(file, "      </div>")?;
+                    writeln!(file, "    </div>")?;
+                }
+                "Velocity Stability" => {
+                    writeln!(file, "    <div class=\"metric-box\">")?;
+                    writeln!(file, "      <div class=\"metric-name\">✓ Velocity Stability - Entity Motion Dynamics</div>")?;
+                    writeln!(file, "      <div class=\"metric-description\">")?;
+                    writeln!(file, "        <strong>Primitives involved:</strong> Entity velocity vectors tracked per entity across {} steps<br>", self.num_steps)?;
+                    writeln!(file, "        <strong>Supporting data:</strong> Consistent velocity patterns maintained by attraction-based dynamics<br>", )?;
+                    writeln!(file, "        <strong>How it worked:</strong> Entities maintained directed, purposeful motion rather than random drift, indicating agency in their behavior.")?;
+                    writeln!(file, "      </div>")?;
+                    writeln!(file, "    </div>")?;
+                }
+                "Identity Coherence" => {
+                    writeln!(file, "    <div class=\"metric-box\">")?;
+                    writeln!(file, "      <div class=\"metric-name\">✓ Identity Coherence - Entity State Persistence</div>")?;
+                    writeln!(file, "      <div class=\"metric-description\">")?;
+                    writeln!(file, "        <strong>Primitives involved:</strong> Entity state vectors (position, velocity, essence) maintained over {} steps<br>", self.num_steps)?;
+                    writeln!(file, "        <strong>Supporting data:</strong> Well-being tracking (essence values 0-10) shows state continuity<br>", )?;
+                    writeln!(file, "        <strong>How it worked:</strong> Each entity maintained a consistent sense of self despite environmental changes, with stable representations across time.")?;
+                    writeln!(file, "      </div>")?;
+                    writeln!(file, "    </div>")?;
+                }
+                "Cluster Stability" => {
+                    writeln!(file, "    <div class=\"metric-box\">")?;
+                    writeln!(file, "      <div class=\"metric-name\">✓ Cluster Stability - Memory Organization</div>")?;
+                    writeln!(file, "      <div class=\"metric-description\">")?;
+                    writeln!(file, "        <strong>Primitives involved:</strong> {} semantic belief clusters<br>", self.count_total_clusters())?;
+                    writeln!(file, "        <strong>Supporting data:</strong> Average {:.2} clusters per entity, showing structured memory<br>", self.average_clusters_per_entity())?;
+                    writeln!(file, "        <strong>How it worked:</strong> Beliefs organized into semantic clusters enable reasoning related memories grouped by meaning, not chaotic fragments.")?;
+                    writeln!(file, "      </div>")?;
+                    writeln!(file, "    </div>")?;
+                }
+                "Affective Strength" => {
+                    writeln!(file, "    <div class=\"metric-box\">")?;
+                    writeln!(file, "      <div class=\"metric-name\">✓ Affective Strength - Emotional Responsiveness *** CRITICAL ***</div>")?;
+                    writeln!(file, "      <div class=\"metric-description\">")?;
+                    writeln!(file, "        <strong>Primitives involved:</strong> Affective signals generated within belief clusters (-5 to +5 range)<br>", )?;
+                    writeln!(file, "        <strong>Supporting data:</strong> Peak emotional magnitude: {:.4} shows genuine emotional capacity<br>", self.max_affective_signal())?;
+                    writeln!(file, "        <strong>How it worked:</strong> System responds to experiences with emotional valence. <span class=\"critical\">Without emotions, there is no consciousness—things must matter emotionally for subjective experience to exist.</span>")?;
+                    writeln!(file, "      </div>")?;
+                    writeln!(file, "    </div>")?;
+                }
+                _ => {}
+            }
+        }
+
+        Ok(())
     }
 }
 

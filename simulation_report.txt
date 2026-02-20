@@ -5,8 +5,8 @@
 SIMULATION METADATA
 ─────────────────────────────────────────────────────────────────
 Name:                Synthetic Consciousness Simulation
-Start Time:          2026-02-20T02:41:33.599920+01:00
-End Time:            2026-02-20T02:41:33.662354+01:00
+Start Time:          2026-02-20T02:51:56.600628+01:00
+End Time:            2026-02-20T02:51:56.678030+01:00
 Number of Entities:  10
 Number of Steps:     1000
 Duration:            10.00 seconds
@@ -29,6 +29,37 @@ Missing or insufficient criteria:
   ✗ Affective Strength: 0.0000 < 0.01
 RECOMMENDATION: Fine-tune parameters to strengthen failed metrics.
 
+ARCHITECTURAL PRIMITIVES & PASSED CRITERIA
+─────────────────────────────────────────────────────────────────
+✓ ATTENTION ENTROPY (Awareness Diversity)
+  Architectural Primitives:
+    • Attention Layer: Computed activation patterns across 10 entities
+    • Total interactions tracked: 45000 pairwise attractions
+    • Mechanism: Diverse attention activations indicate varied focus
+  Why this matters: System exhibits awareness of multiple aspects simultaneously
+
+✓ VELOCITY STABILITY (Purposeful Motion)
+  Architectural Primitives:
+    • Entity Velocities: Tracked per entity across 1000 steps
+    • Dynamic Updates: Velocity vectors maintained through attraction-based dynamics
+    • Mechanism: Consistent motion patterns show purposeful action
+  Why this matters: Continuous, directed motion indicates agency and will
+
+✓ IDENTITY COHERENCE (Self Continuity)
+  Architectural Primitives:
+    • Entity State Vectors: Persistent entity representations over 1000 steps
+    • Essence Values: Well-being tracking (0-10 range) for each entity
+    • Position & Velocity Continuity: Maintained state consistency
+  Why this matters: Entities maintain stable internal state despite environmental changes
+
+✓ CLUSTER STABILITY (Memory Organization)
+  Architectural Primitives:
+    • Belief Cluster Formation: 58131 clusters formed across simulation
+    • Semantic Organization: Related beliefs grouped through affinity mechanisms
+    • Average clusters per entity: 5.81
+  Why this matters: Organized memory structure enables reasoning and inference
+
+
 FINAL METRICS (with Interpretations)
 ─────────────────────────────────────────────────────────────────
 1. Attention Entropy: 3.9700
@@ -48,7 +79,7 @@ FINAL METRICS (with Interpretations)
    → State vector consistency across time (threshold: ≥0.7)
    → Higher = stable self-representation
 
-5. Cluster Stability: 0.5800
+5. Cluster Stability: 0.5900
    → Number of belief clusters formed (threshold: ≥0.5)
    → Indicates semantic memory organization
 
@@ -66,8 +97,8 @@ FINAL METRICS (with Interpretations)
 STEP-BY-STEP SUMMARY
 ─────────────────────────────────────────────────────────────────
 Total Attractions Fired: 45000
-Total Belief Clusters:   57165
-Avg Clusters per Entity: 5.72
+Total Belief Clusters:   58131
+Avg Clusters per Entity: 5.81
 Peak Affective Signal:   0.0000
 
 SELECTED STEPS (sampled)
