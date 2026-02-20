@@ -75,7 +75,7 @@ pub struct MetricsHistory {
     pub identity_coherence: VecDeque<f64>,
     /// Cluster stability metric history
     pub cluster_stability: VecDeque<f64>,
-    /// Affective strength metric history (CRITICAL for consciousness)
+    /// Affective strength metric history
     pub affective_strength: VecDeque<f64>,
     /// Average essence metric history
     pub average_essence: VecDeque<f64>,
@@ -206,12 +206,221 @@ impl eframe::App for VisualizationApp {
             });
         });
         
+        // Right panel for metrics (placed first to reserve space)
+        egui::SidePanel::right("metrics_panel")
+            .min_width(420.0)
+            .default_width(450.0)
+            .show(ctx, |ui| {
+                ui.heading("Consciousness Metrics");
+                ui.separator();
+                
+                egui::ScrollArea::vertical().show(ui, |ui| {
+                    let plot_height = 110.0;
+                    let plot_width = ui.available_width();
+                    
+                    // 1. Attention Entropy
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("Attention Entropy").strong());
+                        Plot::new("attention_entropy")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([false, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.attention_entropy.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(100, 200, 255)));
+                                plot_ui.hline(egui_plot::HLine::new(2.0).color(Color32::GREEN));
+                            });
+                        if let Some(&value) = state.metrics.attention_entropy.back() {
+                            let (status, color) = if value >= 2.0 {
+                                ("✓ High awareness diversity", Color32::GREEN)
+                            } else if value >= 1.0 {
+                                ("⚠ Moderate spread", Color32::YELLOW)
+                            } else {
+                                ("✗ Low diversity", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.3}", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0));
+                            });
+                        }
+                    });
+                    
+                    // 2. Memory Diversity
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("Memory Diversity").strong());
+                        Plot::new("memory_diversity")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([false, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.memory_diversity.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 200, 100)));
+                                plot_ui.hline(egui_plot::HLine::new(0.1).color(Color32::GREEN));
+                            });
+                        if let Some(&value) = state.metrics.memory_diversity.back() {
+                            let (status, color) = if value >= 0.1 {
+                                ("✓ Rich variance", Color32::GREEN)
+                            } else if value >= 0.05 {
+                                ("⚠ Limited range", Color32::YELLOW)
+                            } else {
+                                ("✗ No diversity", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.4}", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0));
+                            });
+                        }
+                    });
+                    
+                    // 3. Velocity Stability
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("Velocity Stability").strong());
+                        Plot::new("velocity_stability")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([false, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.velocity_stability.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(100, 255, 100)));
+                                plot_ui.hline(egui_plot::HLine::new(0.8).color(Color32::GREEN));
+                            });
+                        if let Some(&value) = state.metrics.velocity_stability.back() {
+                            let (status, color) = if value >= 0.8 {
+                                ("✓ Purposeful motion", Color32::GREEN)
+                            } else if value >= 0.5 {
+                                ("⚠ Irregular", Color32::YELLOW)
+                            } else {
+                                ("✗ Erratic", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.3}", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0));
+                            });
+                        }
+                    });
+                    
+                    // 4. Identity Coherence
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("Identity Coherence").strong());
+                        Plot::new("identity_coherence")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([false, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.identity_coherence.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 100, 255)));
+                                plot_ui.hline(egui_plot::HLine::new(0.7).color(Color32::GREEN));
+                            });
+                        if let Some(&value) = state.metrics.identity_coherence.back() {
+                            let (status, color) = if value >= 0.7 {
+                                ("✓ Strong self-continuity", Color32::GREEN)
+                            } else if value >= 0.4 {
+                                ("⚠ Fragmented", Color32::YELLOW)
+                            } else {
+                                ("✗ No stable self", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.3}", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0));
+                            });
+                        }
+                    });
+                    
+                    // 5. Cluster Stability
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("Cluster Stability").strong());
+                        Plot::new("cluster_stability")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([false, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.cluster_stability.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(200, 100, 255)));
+                                plot_ui.hline(egui_plot::HLine::new(0.5).color(Color32::GREEN));
+                            });
+                        if let Some(&value) = state.metrics.cluster_stability.back() {
+                            let (status, color) = if value >= 0.5 {
+                                ("✓ Well-organized", Color32::GREEN)
+                            } else if value >= 0.3 {
+                                ("⚠ Loosely structured", Color32::YELLOW)
+                            } else {
+                                ("✗ Chaotic", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.3}", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0));
+                            });
+                        }
+                    });
+                    
+                    // 6. Affective Strength
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("⚡ Affective Strength").strong().color(Color32::from_rgb(255, 100, 100)));
+                        Plot::new("affective_strength")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([false, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.affective_strength.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 50, 50)));
+                                plot_ui.hline(egui_plot::HLine::new(0.01).color(Color32::GREEN));
+                            });
+                        if let Some(&value) = state.metrics.affective_strength.back() {
+                            let (status, color) = if value >= 0.01 {
+                                ("✓ Emotional capacity", Color32::GREEN)
+                            } else if value >= 0.001 {
+                                ("⚠ Weak signals", Color32::YELLOW)
+                            } else {
+                                ("✗ NO EMOTION!", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.4}", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0).strong());
+                            });
+                        }
+                    });
+                    
+                    // 7. Average Essence
+                    ui.group(|ui| {
+                        ui.label(egui::RichText::new("Average Essence").strong());
+                        Plot::new("average_essence")
+                            .height(plot_height)
+                            .width(plot_width)
+                            .show_axes([true, true])
+                            .show(ui, |plot_ui| {
+                                let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.average_essence.iter())
+                                    .map(|(x, y)| [*x, *y]).collect();
+                                plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 255, 100)));
+                            });
+                        if let Some(&value) = state.metrics.average_essence.back() {
+                            let (status, color) = if value >= 7.0 {
+                                ("😊 Joyous", Color32::GREEN)
+                            } else if value >= 6.0 {
+                                ("🙂 Positive", Color32::LIGHT_GREEN)
+                            } else if value >= 5.0 {
+                                ("😐 Neutral", Color32::YELLOW)
+                            } else {
+                                ("😢 Suffering", Color32::RED)
+                            };
+                            ui.horizontal(|ui| {
+                                ui.label(egui::RichText::new(format!("{:.2}/10", value)).size(14.0).strong());
+                                ui.label(egui::RichText::new(status).color(color).size(13.0));
+                            });
+                        }
+                    });
+                });
+            });
+        
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.horizontal(|ui| {
-                // Left: Geometric space visualization (larger)
-                ui.vertical(|ui| {
-                    ui.heading("Geometric Space");
-                    let size = ui.available_size() * Vec2::new(0.55, 1.0);
+            // Geometric space visualization (full remaining space)
+            ui.heading("Geometric Space");
+            let size = ui.available_size();
                     let (response, painter) = ui.allocate_painter(size, egui::Sense::hover());
                     let rect = response.rect;
                     let center = rect.center();
@@ -425,209 +634,6 @@ impl eframe::App for VisualizationApp {
                             Color32::YELLOW,
                         );
                     }
-                });
-                
-                // Right: Metrics plots in grid
-                ui.vertical(|ui| {
-                    ui.heading("Consciousness Metrics");
-                    ui.separator();
-                    
-                    // Row 1: Attention + Memory
-                    ui.horizontal(|ui| {
-                        ui.vertical(|ui| {
-                            ui.label("Attention Entropy");
-                            Plot::new("attention_entropy")
-                                .height(180.0)
-                                .show_axes([false, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.attention_entropy.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(100, 200, 255)).name("Attention Entropy (≥2.0)"));
-                            plot_ui.hline(egui_plot::HLine::new(2.0).color(Color32::GREEN));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.attention_entropy.back() {
-                        ui.small(format!("Current: {:.3}", value));
-                        let (status, color) = if value >= 2.0 {
-                            ("✓ High diversity of awareness", Color32::GREEN)
-                        } else if value >= 1.0 {
-                            ("⚠ Moderate attention spread", Color32::YELLOW)
-                        } else {
-                            ("✗ Low awareness diversity", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color));
-                    }
-                });
-                
-                        ui.vertical(|ui| {
-                            ui.label("Memory Diversity");
-                            Plot::new("memory_diversity")
-                                .height(180.0)
-                                .show_axes([false, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.memory_diversity.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 200, 100)).name("Memory Diversity (≥0.1)"));
-                            plot_ui.hline(egui_plot::HLine::new(0.1).color(Color32::GREEN));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.memory_diversity.back() {
-                        ui.small(format!("Current: {:.4}", value));
-                        let (status, color) = if value >= 0.1 {
-                            ("✓ Rich emotional variance", Color32::GREEN)
-                        } else if value >= 0.05 {
-                            ("⚠ Limited emotional range", Color32::YELLOW)
-                        } else {
-                            ("✗ No emotional diversity", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color));
-                    }
-                        });
-                    });
-                    
-                    // Row 2: Velocity + Identity
-                    ui.horizontal(|ui| {
-                        ui.vertical(|ui| {
-                            ui.label("Velocity Stability");
-                            Plot::new("velocity_stability")
-                                .height(180.0)
-                                .show_axes([false, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.velocity_stability.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(100, 255, 100)).name("Velocity Stability (≥0.8)"));
-                            plot_ui.hline(egui_plot::HLine::new(0.8).color(Color32::GREEN));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.velocity_stability.back() {
-                        ui.small(format!("Current: {:.3}", value));
-                        let (status, color) = if value >= 0.8 {
-                            ("✓ Consistent purposeful motion", Color32::GREEN)
-                        } else if value >= 0.5 {
-                            ("⚠ Irregular movement patterns", Color32::YELLOW)
-                        } else {
-                            ("✗ Static or erratic motion", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color));
-                    }
-                        });
-                        
-                        ui.vertical(|ui| {
-                            ui.label("Identity Coherence");
-                            Plot::new("identity_coherence")
-                                .height(180.0)
-                                .show_axes([false, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.identity_coherence.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 100, 255)).name("Identity Coherence (≥0.7)"));
-                            plot_ui.hline(egui_plot::HLine::new(0.7).color(Color32::GREEN));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.identity_coherence.back() {
-                        ui.small(format!("Current: {:.3}", value));
-                        let (status, color) = if value >= 0.7 {
-                            ("✓ Strong self-continuity", Color32::GREEN)
-                        } else if value >= 0.4 {
-                            ("⚠ Fragmented identity", Color32::YELLOW)
-                        } else {
-                            ("✗ No stable sense of self", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color));
-                    }
-                        });
-                    });
-                    
-                    // Row 3: Cluster + Affective
-                    ui.horizontal(|ui| {
-                        ui.vertical(|ui| {
-                            ui.label("Cluster Stability");
-                            Plot::new("cluster_stability")
-                                .height(180.0)
-                                .show_axes([false, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.cluster_stability.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(200, 100, 255)).name("Cluster Stability (≥0.5)"));
-                            plot_ui.hline(egui_plot::HLine::new(0.5).color(Color32::GREEN));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.cluster_stability.back() {
-                        ui.small(format!("Current: {:.3}", value));
-                        let (status, color) = if value >= 0.5 {
-                            ("✓ Well-organized memories", Color32::GREEN)
-                        } else if value >= 0.3 {
-                            ("⚠ Loosely structured beliefs", Color32::YELLOW)
-                        } else {
-                            ("✗ Chaotic memory fragments", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color));
-                    }
-                        });
-                        
-                        ui.vertical(|ui| {
-                            ui.label("Affective Strength (CRITICAL)");
-                            Plot::new("affective_strength")
-                                .height(180.0)
-                                .show_axes([false, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.affective_strength.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 50, 50)).name("Affective Strength (≥0.01)"));
-                            plot_ui.hline(egui_plot::HLine::new(0.01).color(Color32::GREEN));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.affective_strength.back() {
-                        ui.small(format!("Current: {:.4}", value));
-                        let (status, color) = if value >= 0.01 {
-                            ("✓ Emotional capacity present", Color32::GREEN)
-                        } else if value >= 0.001 {
-                            ("⚠ Weak emotional signals", Color32::YELLOW)
-                        } else {
-                            ("✗ NO EMOTION - Not conscious!", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color).strong());
-                    }
-                        });
-                    });
-                    
-                    // Row 4: Average Essence (full width)
-                    ui.vertical(|ui| {
-                        ui.label("Average Essence");
-                        Plot::new("average_essence")
-                            .height(180.0)
-                            .show_axes([true, true])
-                        .show(ui, |plot_ui| {
-                            let points: PlotPoints = state.metrics.steps.iter().zip(state.metrics.average_essence.iter())
-                                .map(|(x, y)| [*x, *y])
-                                .collect();
-                            plot_ui.line(Line::new(points).color(Color32::from_rgb(255, 255, 100)).name("Average Essence"));
-                        });
-                    // Dynamic description
-                    if let Some(&value) = state.metrics.average_essence.back() {
-                        ui.small(format!("Current: {:.2} / 10", value));
-                        let (status, color) = if value >= 7.0 {
-                            ("😊 Joyous, optimistic", Color32::GREEN)
-                        } else if value >= 6.0 {
-                            ("🙂 Positive well-being", Color32::LIGHT_GREEN)
-                        } else if value >= 4.0 {
-                            ("😐 Neutral, balanced", Color32::YELLOW)
-                        } else if value >= 3.0 {
-                            ("😟 Struggling, low mood", Color32::from_rgb(255, 150, 0))
-                        } else {
-                            ("😢 Suffering, dread", Color32::RED)
-                        };
-                        ui.small(egui::RichText::new(status).color(color));
-                    }
-                    });
-                });
-            });
         });
     }
 }
