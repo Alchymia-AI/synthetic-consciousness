@@ -454,8 +454,8 @@ impl SimulationResults {
         writeln!(file, "    h2 {{ color: #2c3e50; margin-top: 30px; border-left: 5px solid #3498db; padding-left: 15px; }}")?;
         writeln!(file, "    h3 {{ color: #34495e; margin-top: 15px; }}")?;
         writeln!(file, "    .score {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; border-radius: 10px; margin: 20px 0; }}")?;
-        writeln!(file, "    .score-value {{ font-size: 72px; font-weight: bold; margin: 0; }}")?;
-        writeln!(file, "    .score-status {{ font-size: 24px; margin-top: 10px; }}")?;
+        writeln!(file, "    .score-value {{ font-size: 52px; font-weight: bold; margin: 0; }}")?;
+        writeln!(file, "    .score-status {{ font-size: 20px; margin-top: 10px; }}")?;
         writeln!(file, "    .achieved {{ color: #2ecc71; }}")?;
         writeln!(file, "    .not-achieved {{ color: #e74c3c; }}")?;
         writeln!(file, "    .criteria-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }}")?;
