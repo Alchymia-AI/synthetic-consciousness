@@ -444,11 +444,21 @@ impl Simulation {
             let attention_vals: Vec<f32> = entity.state.memory.iter().take(10).cloned().collect();
             let num_clusters = entity.memory_graph.clusters.len();
             
+            // Compute affective strength from clusters
+            let affective_strength: f32 = if entity.memory_graph.clusters.is_empty() {
+                0.0
+            } else {
+                entity.memory_graph.clusters.values()
+                    .map(|c| c.affective_signal.abs())
+                    .sum::<f32>() / entity.memory_graph.clusters.len() as f32
+            };
+            
             entity_states.push(EntityState {
                 id: entity.id.0,
                 position: entity.pose.position.clone(),
                 velocity: entity.velocity.clone(),
                 essence: entity.essence.value,
+                affective_strength,
                 attention: attention_vals,
                 num_clusters,
             });
@@ -456,6 +466,9 @@ impl Simulation {
         
         // Compute attractions between entities (simplified pairwise)
         let mut attractions = Vec::new();
+        let max_bound = self.config.geometry.bounds.iter().cloned().fold(0.0f32, f32::max).max(1.0);
+        let scale_factor = max_bound / 10.0; // Normalize to ~10 unit space
+        
         for i in 0..entities.len() {
             for j in (i+1)..entities.len() {
                 let dist_sq: f32 = entities[i].pose.position.iter()
@@ -464,8 +477,10 @@ impl Simulation {
                     .sum();
                 
                 if dist_sq > 0.0 {
-                    let strength = 1.0 / (dist_sq + 1.0);
-                    if strength > 0.01 {  // Only show significant attractions
+                    // Scale strength based on bounds size - larger space = lower threshold
+                    let normalized_dist_sq = dist_sq / (scale_factor * scale_factor);
+                    let strength = 1.0 / (normalized_dist_sq + 1.0);
+                    if strength > 0.001 {  // Lower threshold for larger spaces
                         attractions.push((i, j, strength));
                     }
                 }

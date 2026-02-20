@@ -51,6 +51,8 @@ pub struct EntityState {
     pub velocity: Vec<f32>,
     /// Affective essence value (0-10 scale)
     pub essence: f32,
+    /// Affective strength (emotional intensity)
+    pub affective_strength: f32,
     /// Attention distribution across memory dimensions
     pub attention: Vec<f32>,
     /// Number of belief clusters in memory
@@ -208,8 +210,8 @@ impl eframe::App for VisualizationApp {
         
         // Right panel for metrics (placed first to reserve space)
         egui::SidePanel::right("metrics_panel")
-            .min_width(420.0)
-            .default_width(450.0)
+            .resizable(false)
+            .exact_width(380.0)
             .show(ctx, |ui| {
                 ui.heading("Consciousness Metrics");
                 ui.separator();
@@ -436,8 +438,12 @@ impl eframe::App for VisualizationApp {
                         // Calculate auto-scale factor to fit entities in viewport
                         let max_bound = state.bounds.iter().cloned().fold(0.0f32, f32::max).max(1.0);
                         let canvas_size = rect.width().min(rect.height());
-                        let auto_scale = (canvas_size * 0.4) / max_bound; // Use 40% of canvas for bounds
+                        let auto_scale = (canvas_size * 0.8) / max_bound; // Use 80% of canvas for bounds
                         let effective_scale = auto_scale * self.zoom;
+                        
+                        // Get offset to center entities (bounds are 0 to max, center to -half to +half)
+                        let offset_x = state.bounds.get(0).copied().unwrap_or(0.0) / 2.0;
+                        let offset_y = state.bounds.get(1).copied().unwrap_or(0.0) / 2.0;
                         
                         // Draw grid lines to show the plane of existence
                         if self.show_grid {
@@ -481,18 +487,18 @@ impl eframe::App for VisualizationApp {
                                 if let (Some(a), Some(b)) = (state.entities.get(*idx_a), state.entities.get(*idx_b)) {
                                     if a.position.len() >= 2 && b.position.len() >= 2 {
                                         let pos_a = Pos2::new(
-                                            center.x + a.position[0] * effective_scale,
-                                            center.y + a.position[1] * effective_scale,
+                                            center.x + (a.position[0] - offset_x) * effective_scale,
+                                            center.y + (a.position[1] - offset_y) * effective_scale,
                                         );
                                         let pos_b = Pos2::new(
-                                            center.x + b.position[0] * effective_scale,
-                                            center.y + b.position[1] * effective_scale,
+                                            center.x + (b.position[0] - offset_x) * effective_scale,
+                                            center.y + (b.position[1] - offset_y) * effective_scale,
                                         );
                                         
                                         // Vary line color and width by strength
-                                        let alpha = (strength.abs() * 150.0).min(255.0) as u8;
-                                        let line_width = 1.5 + (strength.abs() * 3.0).min(4.0);
-                                        let line_color = Color32::from_rgba_unmultiplied(100, 200, 255, alpha);
+                                        let alpha = (strength.abs() * 100.0).min(180.0) as u8;
+                                        let line_width = 1.0 + (strength.abs() * 2.0).min(3.0);
+                                        let line_color = Color32::from_rgba_unmultiplied(60, 120, 180, alpha);
                                         painter.line_segment(
                                             [pos_a, pos_b],
                                             Stroke::new(line_width, line_color),
@@ -522,8 +528,8 @@ impl eframe::App for VisualizationApp {
                         for entity in &state.entities {
                             if entity.position.len() >= 2 {
                                 let pos = Pos2::new(
-                                    center.x + entity.position[0] * effective_scale,
-                                    center.y + entity.position[1] * effective_scale,
+                                    center.x + (entity.position[0] - offset_x) * effective_scale,
+                                    center.y + (entity.position[1] - offset_y) * effective_scale,
                                 );
                                 
                                 // Color by essence (0-10 scale)
@@ -560,21 +566,62 @@ impl eframe::App for VisualizationApp {
                                 
                                 // Show entity ID label - larger and more visible
                                 if self.show_entity_labels {
+                                    // Emotional status on top (based on essence)
+                                    let (emotion, emo_color) = if entity.essence >= 7.0 {
+                                        ("😊 Joyous", Color32::GREEN)
+                                    } else if entity.essence >= 6.0 {
+                                        ("🙂 Happy", Color32::LIGHT_GREEN)
+                                    } else if entity.essence >= 5.0 {
+                                        ("😐 Neutral", Color32::YELLOW)
+                                    } else if entity.essence >= 4.0 {
+                                        ("😟 Anxious", Color32::from_rgb(255, 150, 0))
+                                    } else {
+                                        ("😢 Distressed", Color32::RED)
+                                    };
+                                    
+                                    // Emotional status above name
+                                    painter.text(
+                                        pos + Vec2::new(0.0, -radius - 30.0),
+                                        egui::Align2::CENTER_BOTTOM,
+                                        emotion,
+                                        egui::FontId::proportional(11.0),
+                                        emo_color,
+                                    );
+                                    
+                                    // Agent name
                                     painter.text(
                                         pos + Vec2::new(0.0, -radius - 15.0),
                                         egui::Align2::CENTER_BOTTOM,
-                                        format!("E{}", entity.id),
+                                        format!("Agent {}", entity.id),
                                         egui::FontId::proportional(13.0),
                                         Color32::from_rgb(220, 220, 255),
                                     );
                                     
-                                    // Show essence value below the circle
+                                    // Show essence value and affective strength below the circle
                                     painter.text(
-                                        pos + Vec2::new(0.0, radius + 15.0),
+                                        pos + Vec2::new(0.0, radius + 12.0),
                                         egui::Align2::CENTER_TOP,
-                                        format!("{:.1}", entity.essence),
-                                        egui::FontId::proportional(11.0),
+                                        format!("E:{:.1}", entity.essence),
+                                        egui::FontId::proportional(10.0),
                                         Color32::from_rgb(200, 200, 200),
+                                    );
+                                    
+                                    // Affective strength indicator with meaning
+                                    let (aff_label, aff_color) = if entity.affective_strength >= 0.1 {
+                                        ("⚡ Strong Emotion", Color32::from_rgb(255, 100, 100))
+                                    } else if entity.affective_strength >= 0.01 {
+                                        ("💫 Emotion Detected", Color32::from_rgb(255, 180, 100))
+                                    } else if entity.affective_strength >= 0.001 {
+                                        ("〰 Weak Signal", Color32::from_rgb(200, 200, 100))
+                                    } else {
+                                        ("⊘ No Emotion", Color32::RED)
+                                    };
+                                    painter.text(
+                                        pos + Vec2::new(0.0, radius + 24.0),
+                                        egui::Align2::CENTER_TOP,
+                                        aff_label,
+                                        egui::FontId::proportional(10.0),
+                                        aff_color,
                                     );
                                 }
                                 

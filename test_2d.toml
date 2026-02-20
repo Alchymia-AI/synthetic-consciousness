@@ -1,17 +1,17 @@
 [metadata]
 name = "Test 2D Visualization"
-description = "Simple 2D test with 5 entities"
+description = "2D test with 50 entities"
 version = "1.0.0"
 
 [geometry]
 dimension = 2
-bounds = [10.0, 10.0]
+bounds = [100.0, 100.0]
 periodic = true
 
 [attraction]
 kernel = "Gaussian"
-sigma = 1.0
-lambda = 0.5
+sigma = 3.0
+lambda = 0.05
 
 [state]
 memory_dim = 50
@@ -31,7 +31,7 @@ decay = 0.1
 experience_scale = 1.0
 
 [simulation]
-num_entities = 5
-num_steps = 500
+num_entities = 40
+num_steps = 1000
 dt = 0.01
-seed = 42
+seed = 0
