@@ -130,8 +130,12 @@ For full mathematical treatment, see [whitepaper.md](./whitepaper.md).
 ### Build & Run
 
 ```bash
+# Build
 cargo build --release
+# Run default 2D
 cargo run --release
+# Run 3D with custom config
+cargo run --release -- example_config_3d.toml
 cargo test
 ```
 

@@ -8,7 +8,7 @@ Date: February 2026
 
 ## 2. Abstract
 
-This whitepaper proposes a technical architecture for a Rust-based AI/ML simulation
+This whitepaper proposes a technical architecture for AI/ML simulation
 framework that explores synthetic consciousness through four primitives: atomic geometry,
 attraction, statefulness, and perpetual velocity. The research problem is the absence of
 formal, testable architectures that connect low-level interaction dynamics to emergent
@@ -19,8 +19,7 @@ minimal velocity injection rule. The system is evaluated through reproducible si
 runs, ablation studies, and metrics such as attention entropy, memory diversity, velocity
 stability, and identity coherence. Expected outcomes are measurable relationships between
 interaction dynamics and stable identity formation under varying attention and memory
-parameters. The final recommendation is to operationalize the framework as a modular
-Rust crate with standardized metrics and experiment protocols, enabling iterative
+parameters. The final recommendation is to operationalize the framework as a modular crate with standardized metrics and experiment protocols, enabling iterative
 research on synthetic consciousness hypotheses while remaining explicit about the
 speculative nature of any claims regarding subjective experience.
 
@@ -545,7 +544,7 @@ stability.
 
 ### Recommendations
 
-- Implement the architecture as a modular Rust crate with reproducible experiments.
+- Implement the architecture as a modular crate with reproducible experiments.
 - Publish baseline configurations, metrics, and experiment protocols.
 - Encourage external replication and critique to avoid over-interpretation.
 

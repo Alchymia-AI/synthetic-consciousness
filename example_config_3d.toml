@@ -1,0 +1,58 @@
+[metadata]
+name = "Synthetic Consciousness: 3D Exploration"
+description = "3D simulation with 20 entities exploring consciousness emergence"
+version = "1.0.0"
+
+[geometry]
+# 2 for 2D plane, 3 for 3D space
+dimension = 3
+# Domain bounds (one per dimension)
+bounds = [20.0, 20.0, 20.0]
+# Periodic boundary conditions (wrapping)
+periodic = true
+
+[attraction]
+# "Gaussian" or "InverseDistance" kernel
+kernel = "Gaussian"
+# Gaussian bandwidth (sigma)
+sigma = 1.5
+# Softmax temperature (lambda)
+lambda = 0.8
+
+[state]
+# Long-term memory vector dimensionality
+memory_dim = 150
+# Immediate context vector dimensionality
+context_dim = 40
+# Memory decay coefficient
+decay_alpha = 0.97
+# Attention influence coefficient
+beta_attention = 0.6
+# Memory influence coefficient
+gamma_memory = 0.4
+
+[dynamics]
+# Time step
+dt = 0.01
+# Minimum speed to enforce (prevents static equilibria)
+min_speed = 0.08
+# Velocity damping per step (0.99 = 1% dissipation)
+damping = 0.98
+
+[essence]
+# Baseline well-being (midpoint)
+baseline = 5.0
+# Decay rate toward baseline
+decay = 0.15
+# Scale factor for affective signal integration
+experience_scale = 1.5
+
+[simulation]
+# Number of agents/entities to simulate
+num_entities = 20
+# Number of simulation steps
+num_steps = 5000
+# Time step (should match dynamics.dt)
+dt = 0.01
+# Random seed for reproducibility
+seed = 12345

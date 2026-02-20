@@ -1,0 +1,4 @@
+*.ot
+target/
+*.lock
+.DS_Store
